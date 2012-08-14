@@ -1,12 +1,9 @@
 package ananas.app.rfc_tw.gui;
 
-import java.io.InputStream;
-
 import javax.swing.JInternalFrame;
 
 import ananas.lib.blueprint.Blueprint;
 import ananas.lib.blueprint.IDocument;
-import ananas.lib.blueprint.elements.swing.IEJInternalFrame;
 
 public class ProjectViewController {
 
@@ -17,15 +14,13 @@ public class ProjectViewController {
 	public ProjectViewController() {
 
 		// load
-		String path = "/gui/ProjectView.xml";
-		InputStream is = "".getClass().getResourceAsStream(path);
-		String docURI = null;
-		IDocument doc = Blueprint.getInstance().loadDocument(is, docURI);
+		String uri = "resource:///gui/ProjectView.xml";
+		IDocument doc = Blueprint.getInstance().loadDocument(uri);
 		// this.mDoc = doc;
 
-		IEJInternalFrame mainFrame = (IEJInternalFrame) doc
-				.findElementById(R.id.root_view);
-		this.mRootView = mainFrame.toJInternalFrame();
+		JInternalFrame mainFrame = (JInternalFrame) doc
+				.findTargetById(R.id.root_view);
+		this.mRootView = mainFrame;
 
 	}
 

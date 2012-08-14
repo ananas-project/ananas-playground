@@ -1,8 +1,8 @@
 package ananas.app.rfc_tw.gui;
 
+import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.InputStream;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -10,9 +10,6 @@ import javax.swing.JInternalFrame;
 
 import ananas.lib.blueprint.Blueprint;
 import ananas.lib.blueprint.IDocument;
-import ananas.lib.blueprint.elements.awt.IEMenuItem;
-import ananas.lib.blueprint.elements.swing.IEJDesktopPane;
-import ananas.lib.blueprint.elements.swing.IEJFrame;
 
 public class WorkbenchFrameController {
 
@@ -23,22 +20,17 @@ public class WorkbenchFrameController {
 	private WorkbenchFrameController() {
 
 		// load
-		String path = "/gui/WorkbenchFrame.xml";
-		InputStream is = "".getClass().getResourceAsStream(path);
-		String docURI = null;
-		IDocument doc = Blueprint.getInstance().loadDocument(is, docURI);
-		// this.mDoc = doc;
+		String uri = "resource:///gui/WorkbenchFrame.xml";
+		IDocument doc = Blueprint.getInstance().loadDocument(uri);
 
-		IEJFrame mainFrame = (IEJFrame) doc.findElementById(R.id.root_view);
-		this.mMainFrame = mainFrame.toJFrame();
+		JFrame mainFrame = (JFrame) doc.findTargetById(R.id.root_view);
+		this.mMainFrame = mainFrame;
 
-		IEJDesktopPane desktop = (IEJDesktopPane) doc
-				.findElementById(R.id.desktop);
-		this.mDesktop = desktop.toJDesktopPane();
+		JDesktopPane desktop = (JDesktopPane) doc.findTargetById(R.id.desktop);
+		this.mDesktop = desktop;
 
-		IEMenuItem menuItem;
-		menuItem = (IEMenuItem) doc.findElementById(R.id.menu_file_new);
-		menuItem.toMenuItem().addActionListener(this.mMenuFileNewListener);
+		MenuItem menuItem = (MenuItem) doc.findTargetById(R.id.menu_file_new);
+		menuItem.addActionListener(this.mMenuFileNewListener);
 
 	}
 
