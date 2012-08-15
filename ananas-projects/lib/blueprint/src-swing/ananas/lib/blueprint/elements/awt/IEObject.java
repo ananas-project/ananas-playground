@@ -52,6 +52,8 @@ public interface IEObject extends IElement {
 	public static interface IAttrParser {
 
 		int parsePixels(String s);
+
+		boolean parseBoolean(String value);
 	}
 
 	public static class DefaultAttrParser implements IAttrParser {
@@ -61,6 +63,19 @@ public interface IEObject extends IElement {
 			if (s == null)
 				return 0;
 			return Integer.parseInt(s);
+		}
+
+		@Override
+		public boolean parseBoolean(String value) {
+			if (value == null) {
+				return false;
+			} else if (value.equalsIgnoreCase("yes")) {
+			} else if (value.equalsIgnoreCase("true")) {
+			} else if (value.equalsIgnoreCase("1")) {
+			} else {
+				return false;
+			}
+			return true;
 		}
 	}
 

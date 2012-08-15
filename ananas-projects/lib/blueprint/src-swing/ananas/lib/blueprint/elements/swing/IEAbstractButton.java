@@ -10,6 +10,7 @@ public interface IEAbstractButton extends IEJComponent {
 			IEAbstractButton {
 
 		public final static String attr_text = "text";
+		public final static String attr_label = "label";
 
 		@Override
 		public AbstractButton toAbstractButton() {
@@ -23,6 +24,8 @@ public interface IEAbstractButton extends IEJComponent {
 				return false;
 
 			} else if (name.equals(attr_text)) {
+				this.toAbstractButton().setText(value);
+			} else if (name.equals(attr_label)) {
 				this.toAbstractButton().setText(value);
 
 			} else {

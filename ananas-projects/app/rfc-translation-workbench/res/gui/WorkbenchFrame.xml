@@ -1,44 +1,39 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <bp:blueprint xmlns:bp="xmlns:ananas:blueprint:base"
 	xmlns:awt="xmlns:ananas:blueprint:awt" xmlns:swing="xmlns:ananas:blueprint:swing">
 
 	<bp:import type="class:NamespaceLoader"
 		value="ananas.lib.blueprint.elements.swing.NamespaceLoader" />
+
 	<bp:import type="class:NamespaceLoader"
 		value="ananas.lib.blueprint.elements.awt.NamespaceLoader" />
 
 	<bp:content>
-		<JFrame xmlns="xmlns:ananas:blueprint:swing" id="@+id/root_view"
-			title="RFC Translation Workbench" x="320" y="240" width="640" height="480">
 
-			<MenuBar xmlns="xmlns:ananas:blueprint:awt">
-				<Menu label="File">
-					<MenuItem label="New" id="@+id/menu_file_new"></MenuItem>
-					<MenuItem id="id_menu_exit" label="Exit">
-					</MenuItem>
-				</Menu>
-				<Menu label="Edit">
-					<MenuItem label="Cut"></MenuItem>
-					<MenuItem label="Copy"></MenuItem>
-					<MenuItem label="Paste"></MenuItem>
-					<Menu label="Find">
-						<MenuItem label="Find in Document"></MenuItem>
-						<MenuItem label="Find in Directory"></MenuItem>
-					</Menu>
-				</Menu>
-				<Menu label="Window">
-					<MenuItem id="@+id/menu_new_window" label="New Window"></MenuItem>
-				</Menu>
-				<Menu label="Help">
-					<MenuItem label="Help Content"></MenuItem>
-					<MenuItem label="About"></MenuItem>
-				</Menu>
-			</MenuBar>
+		<JFrame id="root_view" height="480" title="RFC Translation Workbench"
+			width="640" x="320" xmlns="xmlns:ananas:blueprint:swing" y="240">
+
+			<JMenuBar>
+				<JMenu label="File">
+					<JMenuItem id="menu_file_new" label="New ..." />
+					<JSeparator />
+					<JMenuItem id="menu_file_exit" label="Exit" />
+				</JMenu>
+				<JMenu label="Window">
+					<!-- JMenuItem id="menu_window_new" label="New Window" / -->
+				</JMenu>
+				<JMenu label="Help">
+					<JMenuItem label="Help Content" />
+					<JSeparator />
+					<JMenuItem label="About" />
+				</JMenu>
+			</JMenuBar>
 
 			<invoke method="setContentPane">
-				<JDesktopPane id="@+id/desktop" />
-			</invoke>
 
+				<JDesktopPane id="desktop" />
+			</invoke>
 		</JFrame>
 	</bp:content>
+
 </bp:blueprint>

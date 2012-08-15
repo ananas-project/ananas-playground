@@ -10,6 +10,7 @@ public interface IEJTextComponent extends IEJComponent {
 			IEJTextComponent {
 
 		private static final String attr_text = "text";
+		private static final String attr_editable = "editable";
 
 		private StringBuffer mStrBuf;
 		private String mText;
@@ -25,6 +26,9 @@ public interface IEJTextComponent extends IEJComponent {
 				return false;
 			} else if (name.equals(attr_text)) {
 				this.mText = value;
+			} else if (name.equals(attr_editable)) {
+				this.toJTextComponent().setEditable(
+						this.getAttrParser().parseBoolean(value));
 			} else {
 				return super.setAttribute(nsURI, name, value);
 			}

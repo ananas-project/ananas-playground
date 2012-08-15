@@ -34,12 +34,19 @@ public interface IEJFrame extends IEFrame {
 
 		@Override
 		public boolean appendChild(IElement element) {
+
 			if (element == null) {
 				return false;
+
+			} else if (element instanceof IEJMenuBar) {
+				IEJMenuBar mb = (IEJMenuBar) element;
+				this.toJFrame().setJMenuBar(mb.toJMenuBar());
+
 			} else {
 				return super.appendChild(element);
+
 			}
-			// return true;
+			return true;
 		}
 
 		@Override

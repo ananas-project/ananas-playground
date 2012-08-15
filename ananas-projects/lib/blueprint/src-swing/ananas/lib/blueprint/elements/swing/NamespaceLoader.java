@@ -5,9 +5,14 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
@@ -55,6 +60,12 @@ public class NamespaceLoader implements INamespaceLoader {
 				JDesktopPane.class);
 		reg(ns, "JInternalFrame", IEJInternalFrame.Wrapper.class,
 				JInternalFrame.class);
+
+		reg(ns, "JMenuBar", IEJMenuBar.Wrapper.class, JMenuBar.class);
+		reg(ns, "JMenuItem", IEJMenuItem.Wrapper.class, JMenuItem.class);
+		reg(ns, "JMenu", IEJMenu.Wrapper.class, JMenu.class);
+		reg(ns, "JPopupMenu", IEJPopupMenu.Wrapper.class, JPopupMenu.class);
+		reg(ns, "JSeparator", IEJSeparator.Wrapper.class, JSeparator.class);
 
 		// } end
 

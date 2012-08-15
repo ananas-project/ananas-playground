@@ -2,6 +2,8 @@ package ananas.lib.blueprint.elements.swing;
 
 import javax.swing.JInternalFrame;
 
+import ananas.lib.blueprint.IElement;
+
 public interface IEJInternalFrame extends IEJComponent {
 
 	JInternalFrame toJInternalFrame();
@@ -41,6 +43,23 @@ public interface IEJInternalFrame extends IEJComponent {
 		public Object createTarget() {
 			JInternalFrame ret = new JInternalFrame("", true, true, true, true);
 			return ret;
+		}
+
+		@Override
+		public boolean appendChild(IElement element) {
+
+			if (element == null) {
+				return false;
+			
+			} else if (element instanceof IEJMenuBar) {
+				IEJMenuBar mb = (IEJMenuBar) element;
+				this.toJInternalFrame().setJMenuBar(mb.toJMenuBar());
+			
+			} else {
+				return super.appendChild(element);
+			
+			}
+			return true;
 		}
 
 	}

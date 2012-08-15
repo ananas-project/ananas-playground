@@ -1,118 +1,43 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <bp:blueprint xmlns:bp="xmlns:ananas:blueprint:base"
 	xmlns:awt="xmlns:ananas:blueprint:awt" xmlns:swing="xmlns:ananas:blueprint:swing">
 
 	<bp:import type="class:NamespaceLoader"
 		value="ananas.lib.blueprint.elements.swing.NamespaceLoader" />
+
 	<bp:import type="class:NamespaceLoader"
 		value="ananas.lib.blueprint.elements.awt.NamespaceLoader" />
 
 	<bp:content>
-		<JInternalFrame xmlns="xmlns:ananas:blueprint:swing"
-			id="@+id/root_view" title="Project - untitled" x="320" y="240"
-			width="640" height="480">
 
+		<JInternalFrame id="root_view" height="480"
+			title="Project - untitled" width="640" x="30"
+			xmlns="xmlns:ananas:blueprint:swing" y="30">
 
-			<awt:GridLayout rows="2" columns="2" />
+			<JMenuBar>
+				<JMenu label="Edit">
+					<JMenuItem label="Cut" />
+					<JMenuItem label="Copy" />
+					<JMenuItem label="Paste" />
+					<JSeparator />
+					<JMenu label="Find">
+						<JMenuItem label="Find in Document" />
+						<JMenuItem label="Find in Directory" />
+					</JMenu>
+					<JSeparator />
+					<JMenuItem text="Set Original Text ..." />
+				</JMenu>
+			</JMenuBar>
 
-			<awt:Container>
-				<awt:BorderLayout />
+			<awt:GridLayout columns="2" rows="1" />
 
-				<awt:position value="south" />
-				<JButton id="id_button_south" text="south" />
+			<JScrollPane>
+				<JTextArea id="original_text_view" editable="false" />
+			</JScrollPane>
 
-				<swing:position value="north" />
-				<JButton id="id_button_hello" text="hello" />
-
-				<swing:position value="east" />
-				<JButton id="id_button_3" text="east"></JButton>
-
-				<swing:position value="west" />
-				<JLabel id="id_button_4" text="west-xxxxxxxx" />
-
-				<swing:position value="center" />
-				<JButton id="id_button_5" text="中心"></JButton>
-
-			</awt:Container>
-
-			<awt:Container>
-				<awt:FlowLayout />
-				<awt:position value="a" />
-				<JButton id="id_button_1" text="button 1"></JButton>
-				<swing:position value="b" />
-				<JButton id="id_button_2" text="button 2"></JButton>
-				<swing:position value="b" />
-				<JButton id="id_button_3" text="button 3"></JButton>
-				<swing:position value="b" />
-				<JButton id="id_button_4" text="button 4"></JButton>
-
-				<JButton id="id_button_4" text="(^_^)"></JButton>
-
-			</awt:Container>
-
-			<JPanel>
-				<awt:GridLayout rows="4" columns="4" />
-
-				<JButton text="a JButton" />
-				<JLabel text="a JLabel" />
-				<JTextField text="a JTextField" />
-				<JPasswordField text="a JPasswordField" />
-
-			</JPanel>
-
-			<JPanel>
-				<awt:GridLayout rows="1" columns="0" />
-				<JScrollPane>
-					<JTextArea>
-
-						A JLabel object can
-						display either text, an image, or
-						both. You can
-						specify where in the
-						label's display area the label's
-						contents are
-						aligned by setting the
-						vertical and horizontal
-						alignment. By
-						default, labels are vertically
-						centered in their
-						display area.
-						Text-only labels are leading edge
-						aligned, by default;
-						image-only
-						labels are horizontally centered, by
-						default.
-
-					</JTextArea>
-				</JScrollPane>
-				<JScrollPane>
-					<JLabel>
-					<![CDATA[<html><body><p>]]>
-						A display area for a short text string or an image, or both. A
-						label
-						does not react to input events. As a result, it cannot get
-						the
-						keyboard focus. A label can, however, display a keyboard
-						alternative as a convenience for a nearby component that has a
-						keyboard alternative but can't display it.
-					<![CDATA[</p><p>]]>
-						A JLabel object can
-						display either text, an image, or both. You can
-						specify where in the
-						label's display area the label's contents are
-						aligned by setting the
-						vertical and horizontal alignment. By
-						default, labels are vertically
-						centered in their display area.
-						Text-only labels are leading edge
-						aligned, by default; image-only
-						labels are horizontally centered, by
-						default.
-					<![CDATA[</p></body></html>]]>
-					</JLabel>
-				</JScrollPane>
-			</JPanel>
+			<JPanel />
 
 		</JInternalFrame>
 	</bp:content>
+
 </bp:blueprint>
