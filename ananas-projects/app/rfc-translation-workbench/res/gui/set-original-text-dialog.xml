@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bp:blueprint xmlns:bp="xmlns:ananas:blueprint:base"
+	xmlns:awt="xmlns:ananas:blueprint:awt" xmlns:swing="xmlns:ananas:blueprint:swing">
+
+	<bp:import type="class:NamespaceLoader"
+		value="ananas.lib.blueprint.elements.swing.NamespaceLoader" />
+
+	<bp:import type="class:NamespaceLoader"
+		value="ananas.lib.blueprint.elements.awt.NamespaceLoader" />
+
+	<bp:content>
+		<JDialog id="root_view" height="300" title="Original Text Settings"
+			width="500" x="200" xmlns="xmlns:ananas:blueprint:swing" y="200">
+
+			<JButton id="button_browse" label="browse ..." />
+
+		</JDialog>
+	</bp:content>
+
+</bp:blueprint>

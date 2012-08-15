@@ -2,6 +2,7 @@ package ananas.lib.blueprint.elements.swing;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -66,6 +67,8 @@ public class NamespaceLoader implements INamespaceLoader {
 		reg(ns, "JMenu", IEJMenu.Wrapper.class, JMenu.class);
 		reg(ns, "JPopupMenu", IEJPopupMenu.Wrapper.class, JPopupMenu.class);
 		reg(ns, "JSeparator", IEJSeparator.Wrapper.class, JSeparator.class);
+
+		reg(ns, "JDialog", IEJDialog.Wrapper.class, JDialog.class);
 
 		// } end
 

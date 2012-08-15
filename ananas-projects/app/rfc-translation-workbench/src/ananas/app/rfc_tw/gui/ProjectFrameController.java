@@ -1,8 +1,8 @@
 package ananas.app.rfc_tw.gui;
 
-import java.awt.MenuBar;
-
+import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JTextArea;
 
 import ananas.app.rfc_tw.event.Event;
@@ -18,7 +18,7 @@ public class ProjectFrameController implements IInternalFrameController {
 	private final JInternalFrame mRootView;
 	private final JTextArea mOriginalTextView;
 
-	private MenuBar mMenuBar;
+	private JMenuBar mMenuBar;
 
 	// private IDocument mDoc;
 
@@ -27,7 +27,7 @@ public class ProjectFrameController implements IInternalFrameController {
 
 		// load
 		IDocument doc = Blueprint.getInstance().loadDocument(
-				R.file.projectview_xml);
+				R.file.project_frame_xml);
 		// this.mDoc = doc;
 
 		this.mRootView = (JInternalFrame) doc.findTargetById(R.id.root_view);
@@ -59,8 +59,19 @@ public class ProjectFrameController implements IInternalFrameController {
 	}
 
 	@Override
-	public MenuBar getMenuBar() {
+	public JComponent getRootView() {
+		return this.mRootView;
+	}
+
+	@Override
+	public JMenuBar getJMenuBar() {
 		return this.mMenuBar;
+	}
+
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,9 +1,9 @@
 package ananas.app.rfc_tw.gui;
 
-import java.awt.MenuBar;
+import javax.swing.JMenuBar;
 
-public interface IInternalFrameController {
+public interface IInternalFrameController extends IViewController {
 
-	MenuBar getMenuBar();
+	JMenuBar getJMenuBar();
 
 }

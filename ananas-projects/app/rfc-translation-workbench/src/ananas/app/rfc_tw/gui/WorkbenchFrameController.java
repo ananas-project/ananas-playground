@@ -1,5 +1,6 @@
 package ananas.app.rfc_tw.gui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,7 +13,7 @@ import ananas.app.rfc_tw.model.IProject;
 import ananas.lib.blueprint.Blueprint;
 import ananas.lib.blueprint.IDocument;
 
-public class WorkbenchFrameController {
+public class WorkbenchFrameController implements IViewController {
 
 	private final IDocument mDoc;
 	private final JFrame mMainFrame;
@@ -22,7 +23,7 @@ public class WorkbenchFrameController {
 
 		// load
 		IDocument doc = Blueprint.getInstance().loadDocument(
-				R.file.workbenchframe_xml);
+				R.file.workbench_frame_xml);
 		this.mDoc = doc;
 
 		JFrame mainFrame = (JFrame) doc.findTargetById(R.id.root_view);
@@ -48,7 +49,12 @@ public class WorkbenchFrameController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				IProject project = IProject.Factory.newProject();
+
+				SetOriginalTextDialogController dlg = new SetOriginalTextDialogController(
+						project);
+				dlg.show();
 
 				int x = ((this.mX++) % 10) * 30;
 				int y = ((this.mY++) % 10) * 30;
@@ -73,7 +79,7 @@ public class WorkbenchFrameController {
 
 	}
 
-	protected void show() {
+	public void show() {
 		this.mMainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.mMainFrame.setVisible(true);
 	}
@@ -87,6 +93,11 @@ public class WorkbenchFrameController {
 				wfc.show();
 			}
 		});
+	}
+
+	@Override
+	public Component getRootView() {
+		return this.mMainFrame;
 	}
 
 }
