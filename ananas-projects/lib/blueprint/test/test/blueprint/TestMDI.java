@@ -17,6 +17,7 @@ public class TestMDI {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				System.out.println("run " + TestMDI.class);
 				TestMDI mdi = new TestMDI();
 				mdi.show();
 			}
@@ -30,14 +31,14 @@ public class TestMDI {
 
 		// load
 		IDocument doc = Blueprint.getInstance().loadDocument(
-				"resource:///test-mdi.xml");
+				R.file.test_mdi_xml);
 
 		// bind listener
-		this.mFrame = (JFrame) doc.findTargetById("root");
+		this.mFrame = (JFrame) doc.findTargetById(R.id.root);
 		this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		IEMenuItem menuItem = (IEMenuItem) doc
-				.findElementById("@+id/menu_new_window");
+				.findElementById(R.id.__id_menu_new_window);
 		menuItem.toMenuItem().addActionListener(new ActionListener() {
 
 			@Override
@@ -46,16 +47,16 @@ public class TestMDI {
 			}
 		});
 
-		this.mDesktop = (JDesktopPane) doc.findTargetById("@+id/desktop");
+		this.mDesktop = (JDesktopPane) doc.findTargetById(R.id.__id_desktop);
 
 	}
 
 	protected void onClickNewWindow() {
 
 		// load
-		String uri = "resource:///test-mdi-child.xml";
-		IDocument doc = Blueprint.getInstance().loadDocument(uri);
-		JInternalFrame iFrame = (JInternalFrame) doc.findTargetById("root");
+		IDocument doc = Blueprint.getInstance().loadDocument(
+				R.file.test_mdi_child_xml);
+		JInternalFrame iFrame = (JInternalFrame) doc.findTargetById(R.id.root);
 		iFrame.setVisible(true);
 		iFrame.setBounds(0, 0, 640, 480);
 		this.mDesktop.add(iFrame);

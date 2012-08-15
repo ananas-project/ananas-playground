@@ -1,7 +1,12 @@
 package ananas.lib.blueprint.tools;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -57,6 +62,28 @@ public class ResourceIdGen {
 	private void run() {
 		ResultSet rlt = new ResultSet();
 		this.scanResDir(rlt);
+		this.outputJava(rlt);
+	}
+
+	private void outputJava(ResultSet rlt) {
+		System.out.println("write to java file");
+		System.out.println("begin[");
+		try {
+			final String baseDir = this.mParamTable.get(p_base_dir);
+			final String genDir = this.mParamTable.get(p_gen_dir);
+			final String rClass = this.mParamTable.get(p_r_class);
+			String classPath = rClass.replace('.', '/');
+			File file = new File(baseDir, genDir + "/" + classPath + ".java");
+			file.getParentFile().mkdirs();
+			OutputStream os = new FileOutputStream(file);
+			rlt.writeToJavaFile(os, rClass);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
+		System.out.println("]eof");
 	}
 
 	private void scanResDir(ResultSet rlt) {
@@ -84,11 +111,14 @@ public class ResourceIdGen {
 	private void _scanFile(File file, ResultSet rlt) {
 
 		System.out.print("scan " + file.getAbsolutePath());
+
+		String exName = null;
+
 		{
 			// filter by extend-name
 			String name = file.getName();
 			int index = name.lastIndexOf('.');
-			String exName = (index >= 0) ? name.substring(index) : "";
+			exName = (index >= 0) ? name.substring(index) : "";
 			if (this.mAcceptFile.indexOf(exName) < 0) {
 				System.out.println(" [skip]");
 				return;
@@ -113,7 +143,8 @@ public class ResourceIdGen {
 		}
 		{
 			// scan file content
-			this._scanFileContent(file, rlt);
+			if (exName.equalsIgnoreCase(".xml"))
+				this._scanFileContent(file, rlt);
 		}
 	}
 
@@ -211,6 +242,39 @@ public class ResourceIdGen {
 		public ResultSet() {
 			this.mTableNS = new HashMap<String, ResultSetNamespace>();
 			this.mTableTS = new HashMap<String, ResultSetTypespace>();
+		}
+
+		public void writeToJavaFile(OutputStream os, String aClass)
+				throws IOException {
+
+			PrintStream out = new PrintStream(os, true, "utf-8");
+
+			int index = aClass.lastIndexOf('.');
+			String pkgName = aClass.substring(0, index);
+			String className = aClass.substring(index + 1);
+
+			out.println("package " + pkgName + ";");
+			out.println("// This file is generate by {" + this + "} tool.");
+			out.println("// Don't modify it !");
+			out.println("class " + className + " {");
+
+			Set<String> keys = this.mTableTS.keySet();
+			for (String key : keys) {
+				ResultSetTypespace typeSpace = this.mTableTS.get(key);
+				String type = typeSpace.mName;
+				out.println("    " + "public static class " + type + " {");
+				Set<String> keys2 = typeSpace.mTableKV.keySet();
+				for (String key2 : keys2) {
+					String value2 = typeSpace.mTableKV.get(key2);
+					out.println("        " + "public static final String "
+							+ key2 + " = \"" + value2 + "\";");
+				}
+				out.println("    " + "}");
+			}
+
+			out.println("}");
+			out.flush();
+			os.flush();
 		}
 
 		public ResultSetNamespace getNS(String name) {
