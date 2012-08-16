@@ -15,6 +15,8 @@ public interface IProject {
 
 	void removeOriginalTextListener(IEventListener listener);
 
+	IDictionary getDictionary();
+
 	public static class Factory {
 
 		public static IProject newProject() {
@@ -25,6 +27,7 @@ public interface IProject {
 
 			private String mOriginalText;
 			private final IEventDispatcher mOriginalTextEventDisp;
+			private IDictionary mDictionary;
 
 			public MyImpl() {
 				this.mOriginalTextEventDisp = new DefaultEventDispatcher();
@@ -49,6 +52,11 @@ public interface IProject {
 			@Override
 			public void removeOriginalTextListener(IEventListener listener) {
 				this.mOriginalTextEventDisp.removeListener(listener);
+			}
+
+			@Override
+			public IDictionary getDictionary() {
+				return this.mDictionary;
 			}
 		}
 	}

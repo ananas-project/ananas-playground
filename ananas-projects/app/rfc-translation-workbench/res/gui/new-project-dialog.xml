@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bp:blueprint xmlns:bp="xmlns:ananas:blueprint:base"
+	xmlns:awt="xmlns:ananas:blueprint:awt" xmlns:swing="xmlns:ananas:blueprint:swing">
+
+	<bp:import type="class:NamespaceLoader"
+		value="ananas.lib.blueprint.elements.swing.NamespaceLoader" />
+
+	<bp:import type="class:NamespaceLoader"
+		value="ananas.lib.blueprint.elements.awt.NamespaceLoader" />
+
+	<bp:content>
+		<JDialog id="root_view" height="300" title="New Project"
+			width="500" x="200" xmlns="xmlns:ananas:blueprint:swing" y="200">
+
+			<awt:BorderLayout />
+
+			<position value="north" />
+			<JPanel>
+				<awt:BorderLayout />
+				<position value="west" />
+				<JLabel text="Original Text File" />
+				<position value="center" />
+				<JTextField id="text_path" editable="false" />
+				<position value="east" />
+				<JButton id="button_browse" label="Browse ..." />
+			</JPanel>
+
+			<position value="center" />
+			<JScrollPane>
+				<JTextArea id="text_original" editable="false" />
+			</JScrollPane>
+
+			<position value="south" />
+			<JPanel>
+				<awt:FlowLayout />
+				<JButton id="button_ok" label="OK" />
+				<JButton id="button_cancel" label="Cancel" />
+			</JPanel>
+
+		</JDialog>
+	</bp:content>
+
+</bp:blueprint>

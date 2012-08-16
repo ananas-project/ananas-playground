@@ -1,23 +1,31 @@
 package ananas.app.rfc_tw.gui;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import ananas.app.rfc_tw.gui.base.AbstractCommandChainNode;
+import ananas.app.rfc_tw.gui.base.IChildFrameController;
+import ananas.app.rfc_tw.gui.base.ICommand;
+import ananas.app.rfc_tw.gui.base.ICommandChainNode;
+import ananas.app.rfc_tw.gui.base.IViewController;
+import ananas.app.rfc_tw.gui.base.IWorkbenchFrameController;
 import ananas.app.rfc_tw.model.IProject;
 import ananas.lib.blueprint.Blueprint;
 import ananas.lib.blueprint.IDocument;
 
-public class WorkbenchFrameController implements IViewController {
+public class WorkbenchFrameController implements IWorkbenchFrameController {
 
 	private final IDocument mDoc;
 	private final JFrame mMainFrame;
 	private final JDesktopPane mDesktop;
+	private final JMenuBar mMenuBar = null;
 
 	private WorkbenchFrameController() {
 
@@ -44,27 +52,11 @@ public class WorkbenchFrameController implements IViewController {
 		menuItem = (JMenuItem) this.mDoc.findTargetById(R.id.menu_file_new);
 		menuItem.addActionListener(new ActionListener() {
 
-			private int mX = 0;
-			private int mY = 0;
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				IProject project = IProject.Factory.newProject();
+				WorkbenchFrameController.this._exeCmdFileNewProject();
 
-				SetOriginalTextDialogController dlg = new SetOriginalTextDialogController(
-						project);
-				dlg.show();
-
-				int x = ((this.mX++) % 10) * 30;
-				int y = ((this.mY++) % 10) * 30;
-
-				ProjectFrameController pv = new ProjectFrameController(project);
-				JInternalFrame itf = pv.getJInternalFrame();
-				itf.setVisible(true);
-				itf.setBounds(x, y, 640, 480);
-				WorkbenchFrameController.this.mDesktop.add(itf);
-				itf.moveToFront();
 			}
 		});
 
@@ -76,6 +68,24 @@ public class WorkbenchFrameController implements IViewController {
 				System.exit(0);
 			}
 		});
+
+	}
+
+	private void _exeCmdFileNewProject() {
+
+		IProject project = IProject.Factory.newProject();
+		NewProjectDialogController dlg = new NewProjectDialogController(project);
+		JDialog jdlg = dlg.getJDialog();
+		jdlg.setModal(true);
+		jdlg.setVisible(true);
+		if (project.getOriginalText() == null) {
+			return;
+		}
+
+		IViewController prjView = new ProjectViewController(project);
+		IChildFrameController childFrame = new ChildFrameController();
+		childFrame.setContent(prjView);
+		this.addChildFrame(childFrame);
 
 	}
 
@@ -96,8 +106,36 @@ public class WorkbenchFrameController implements IViewController {
 	}
 
 	@Override
-	public Component getRootView() {
-		return this.mMainFrame;
+	public JMenuBar getJMenuBar() {
+		return this.mMenuBar;
 	}
+
+	@Override
+	public void addChildFrame(IChildFrameController child) {
+		JInternalFrame iframe = child.getJInternalFrame();
+		this.mDesktop.add(iframe);
+		iframe.setVisible(true);
+		ICommandChainNode cNode = child.getCommandChainNode();
+		ICommandChainNode pNode = this.getCommandChainNode();
+		cNode.setNextNode(pNode);
+	}
+
+	@Override
+	public JDesktopPane getJDesktopPane() {
+		return this.mDesktop;
+	}
+
+	@Override
+	public ICommandChainNode getCommandChainNode() {
+		return this.mCmdChainNode;
+	}
+
+	private final ICommandChainNode mCmdChainNode = new AbstractCommandChainNode() {
+
+		@Override
+		protected ICommand onExecuteCommand(ICommand cmd) {
+			return cmd;
+		}
+	};
 
 }
