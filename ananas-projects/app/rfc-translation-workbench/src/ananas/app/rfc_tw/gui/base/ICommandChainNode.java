@@ -7,5 +7,4 @@ public interface ICommandChainNode {
 	void setNextNode(ICommandChainNode node);
 
 	void executeCommand(ICommand cmd);
-
 }
