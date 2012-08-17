@@ -2,6 +2,7 @@ package ananas.app.rfc_tw.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventObject;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
@@ -10,22 +11,21 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import ananas.app.rfc_tw.gui.base.AbstractCommandChainNode;
 import ananas.app.rfc_tw.gui.base.IChildFrameController;
-import ananas.app.rfc_tw.gui.base.ICommand;
-import ananas.app.rfc_tw.gui.base.ICommandChainNode;
 import ananas.app.rfc_tw.gui.base.IViewController;
 import ananas.app.rfc_tw.gui.base.IWorkbenchFrameController;
 import ananas.app.rfc_tw.model.IProject;
 import ananas.lib.blueprint.Blueprint;
 import ananas.lib.blueprint.IDocument;
+import ananas.lib.blueprint.elements.awt.util.DefaultEventChainNode;
+import ananas.lib.blueprint.elements.awt.util.IEventChainNode;
 
 public class WorkbenchFrameController implements IWorkbenchFrameController {
 
 	private final IDocument mDoc;
 	private final JFrame mMainFrame;
 	private final JDesktopPane mDesktop;
-	private final JMenuBar mMenuBar = null;
+	private final JMenuBar mMenuBar;
 
 	private WorkbenchFrameController() {
 
@@ -37,6 +37,7 @@ public class WorkbenchFrameController implements IWorkbenchFrameController {
 		JFrame mainFrame = (JFrame) doc.findTargetById(R.id.root_view);
 		this.mMainFrame = mainFrame;
 		this.mMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.mMenuBar = (JMenuBar) doc.findTargetById(R.id.menu_bar);
 
 		JDesktopPane desktop = (JDesktopPane) doc.findTargetById(R.id.desktop);
 		this.mDesktop = desktop;
@@ -83,7 +84,7 @@ public class WorkbenchFrameController implements IWorkbenchFrameController {
 		}
 
 		IViewController prjView = new ProjectViewController(project);
-		IChildFrameController childFrame = new ChildFrameController();
+		IChildFrameController childFrame = new ChildFrameController(this);
 		childFrame.setContent(prjView);
 		this.addChildFrame(childFrame);
 
@@ -115,8 +116,8 @@ public class WorkbenchFrameController implements IWorkbenchFrameController {
 		JInternalFrame iframe = child.getJInternalFrame();
 		this.mDesktop.add(iframe);
 		iframe.setVisible(true);
-		ICommandChainNode cNode = child.getCommandChainNode();
-		ICommandChainNode pNode = this.getCommandChainNode();
+		IEventChainNode cNode = child.getEventChainNode();
+		IEventChainNode pNode = this.getEventChainNode();
 		cNode.setNextNode(pNode);
 	}
 
@@ -126,16 +127,35 @@ public class WorkbenchFrameController implements IWorkbenchFrameController {
 	}
 
 	@Override
-	public ICommandChainNode getCommandChainNode() {
-		return this.mCmdChainNode;
+	public IEventChainNode getEventChainNode() {
+		return this.mEventChainNode;
 	}
 
-	private final ICommandChainNode mCmdChainNode = new AbstractCommandChainNode() {
+	protected EventObject onEvent(EventObject event) {
+		if (event instanceof ActionEvent) {
+			return this.onActionEvent((ActionEvent) event);
+		} else {
+			return event;
+		}
+	}
+
+	private ActionEvent onActionEvent(ActionEvent event) {
+
+		System.out.println(this + ".onActionEvent():" + event);
+		return event;
+	}
+
+	private final IEventChainNode mEventChainNode = new DefaultEventChainNode() {
 
 		@Override
-		protected ICommand onExecuteCommand(ICommand cmd) {
-			return cmd;
+		protected EventObject onEvent(EventObject event) {
+			return WorkbenchFrameController.this.onEvent(event);
 		}
 	};
+
+	@Override
+	public JFrame getJFrame() {
+		return this.mMainFrame;
+	}
 
 }

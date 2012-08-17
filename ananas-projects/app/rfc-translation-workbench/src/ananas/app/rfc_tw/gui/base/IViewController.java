@@ -2,14 +2,18 @@ package ananas.app.rfc_tw.gui.base;
 
 import java.awt.Component;
 
-import javax.swing.JMenuBar;
+import ananas.lib.blueprint.elements.awt.util.IEventChainNode;
+import ananas.lib.blueprint.elements.swing.IEJMenuBar;
 
 public interface IViewController {
 
-	JMenuBar getJMenuBar();
+	IEJMenuBar getMenuBar();
 
 	Component getView();
 
-	ICommandChainNode getCommandChainNode();
+	IEventChainNode getEventChainNode();
 
+	boolean bindMenuBar(IEJMenuBar menuBar);
+
+	boolean bindView(Component view);
 }

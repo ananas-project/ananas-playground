@@ -13,7 +13,7 @@
 		<JFrame id="root_view" height="480" title="RFC Translation Workbench"
 			width="640" x="320" xmlns="xmlns:ananas:blueprint:swing" y="240">
 
-			<JMenuBar>
+			<JMenuBar id="menu_bar">
 				<JMenu label="File">
 					<JMenuItem id="menu_file_new" label="New ..." />
 					<JSeparator />

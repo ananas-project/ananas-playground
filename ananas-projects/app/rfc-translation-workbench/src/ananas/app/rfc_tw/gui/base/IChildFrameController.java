@@ -3,6 +3,8 @@ package ananas.app.rfc_tw.gui.base;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
 
+import ananas.lib.blueprint.elements.awt.util.IEventChainNode;
+
 public interface IChildFrameController {
 
 	JMenuBar getJMenuBar();
@@ -13,6 +15,8 @@ public interface IChildFrameController {
 
 	JInternalFrame getJInternalFrame();
 
-	ICommandChainNode getCommandChainNode();
+	IEventChainNode getEventChainNode();
+
+	IWorkbenchFrameController getWorkbench();
 
 }
