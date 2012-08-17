@@ -3,6 +3,7 @@ package ananas.lib.blueprint.elements.awt;
 import java.awt.Menu;
 
 import ananas.lib.blueprint.IElement;
+import ananas.lib.blueprint.elements.awt.util.IEventChainNode;
 
 public interface IEMenu extends IEMenuItem {
 
@@ -27,14 +28,20 @@ public interface IEMenu extends IEMenuItem {
 				return false;
 
 			} else if (element instanceof IEMenuItem) {
-				IEMenuItem item = (IEMenuItem) element;
-				this.toMenu().add(item.toMenuItem());
+				this._addMenuItem((IEMenuItem) element);
 
 			} else {
 				return super.appendChild(element);
 
 			}
 			return true;
+		}
+
+		private void _addMenuItem(IEMenuItem item) {
+			this.toMenu().add(item.toMenuItem());
+			IEventChainNode pNode = this.getEventChainNode();
+			IEventChainNode cNode = item.getEventChainNode();
+			cNode.setNextNode(pNode);
 		}
 
 	}

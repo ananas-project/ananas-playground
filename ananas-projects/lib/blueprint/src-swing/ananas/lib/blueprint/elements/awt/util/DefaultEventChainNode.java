@@ -1,6 +1,7 @@
-package ananas.lib.blueprint.elements.swing;
+package ananas.lib.blueprint.elements.awt.util;
 
 import java.util.EventObject;
+
 
 public class DefaultEventChainNode implements IEventChainNode {
 

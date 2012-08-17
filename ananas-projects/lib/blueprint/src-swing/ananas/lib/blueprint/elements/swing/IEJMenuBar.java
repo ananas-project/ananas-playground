@@ -1,8 +1,12 @@
 package ananas.lib.blueprint.elements.swing;
 
+import java.util.EventObject;
+
 import javax.swing.JMenuBar;
 
 import ananas.lib.blueprint.IElement;
+import ananas.lib.blueprint.elements.awt.util.DefaultEventChainNode;
+import ananas.lib.blueprint.elements.awt.util.IEventChainNode;
 
 public interface IEJMenuBar extends IEJComponent {
 
@@ -12,8 +16,6 @@ public interface IEJMenuBar extends IEJComponent {
 
 	public static class Wrapper extends IEJComponent.Wrapper implements
 			IEJMenuBar {
-
-		private final IEventChainNode mEventChainNode = new DefaultEventChainNode();
 
 		@Override
 		public JMenuBar toJMenuBar() {
@@ -33,6 +35,16 @@ public interface IEJMenuBar extends IEJComponent {
 			}
 			return super.appendChild(child);
 		}
+
+		private final IEventChainNode mEventChainNode = new DefaultEventChainNode() {
+
+			@Override
+			protected EventObject onEvent(EventObject event) {
+				System.out.println(this + ".onEvent():" + event.getSource());
+				return super.onEvent(event);
+			}
+
+		};
 
 	}
 }

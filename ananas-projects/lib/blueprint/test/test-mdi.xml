@@ -18,7 +18,7 @@
 					</MenuItem>
 				</Menu>
 				<Menu label="Edit">
-					<MenuItem label="Cut"></MenuItem>
+					<MenuItem label="Cut" actionCommand="do-edit-cut" ></MenuItem>
 					<MenuItem label="Copy"></MenuItem>
 					<MenuItem label="Paste"></MenuItem>
 					<Menu label="Find">

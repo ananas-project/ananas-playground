@@ -7,6 +7,9 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JMenuItem;
 
+import ananas.lib.blueprint.elements.awt.util.DefaultEventChainNode;
+import ananas.lib.blueprint.elements.awt.util.IEventChainNode;
+
 public interface IEJMenuItem extends IEAbstractButton {
 
 	JMenuItem toJMenuItem();
