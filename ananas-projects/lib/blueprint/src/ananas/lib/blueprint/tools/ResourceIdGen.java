@@ -30,16 +30,16 @@ public class ResourceIdGen {
 	}
 
 	private HashMap<String, String> mParamTable;
-
 	private String mAcceptFile;
-
 	private File mBaseDir;
+	private String mAcceptAttr;
 
 	public final static String p_base_dir = "-base-dir";
 	public final static String p_res_dir = "-res-dir";
 	public final static String p_gen_dir = "-gen-dir";
 	public final static String p_r_class = "-R-class";
 	public final static String p_accept_file = "-accept-file";
+	public final static String p_accept_attr = "-accept-attr";
 
 	private ResourceIdGen() {
 	}
@@ -90,6 +90,7 @@ public class ResourceIdGen {
 		String baseDir = this.mParamTable.get(p_base_dir);
 		String resDir = this.mParamTable.get(p_res_dir);
 		this.mAcceptFile = this.mParamTable.get(p_accept_file);
+		this.mAcceptAttr = this.mParamTable.get(p_accept_attr);
 		File root = new File(baseDir, resDir);
 		this.mBaseDir = root;
 		this._scanDir(root, rlt);
@@ -158,7 +159,7 @@ public class ResourceIdGen {
 		}
 	}
 
-	static class MyXmlHandler extends DefaultHandler {
+	class MyXmlHandler extends DefaultHandler {
 
 		private File mFile;
 		private ResultSet mResult;
@@ -176,8 +177,9 @@ public class ResourceIdGen {
 			for (int i = attr.getLength() - 1; i >= 0; i--) {
 				String name = attr.getLocalName(i);
 				String value = attr.getValue(i);
-				if ("id".equals(name)) {
-					this.mResult.add(namespace, "id", value, value);
+
+				if (ResourceIdGen.this.mAcceptAttr.indexOf(name) >= 0) {
+					this.mResult.add(namespace, name, value, value);
 				}
 			}
 		}

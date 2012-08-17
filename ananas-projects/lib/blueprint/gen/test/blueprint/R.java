@@ -1,5 +1,5 @@
 package test.blueprint;
-// This file is generate by {ananas.lib.blueprint.tools.ResourceIdGen$ResultSet@dfbb43} tool.
+// This file is generate by {ananas.lib.blueprint.tools.ResourceIdGen$ResultSet@3e926} tool.
 // Don't modify it !
 class R {
     public static class id {
@@ -20,5 +20,8 @@ class R {
         public static final String test_xml = "resource:///test.xml";
         public static final String test_mdi_child_xml = "resource:///test-mdi-child.xml";
         public static final String test_mdi_xml = "resource:///test-mdi.xml";
+    }
+    public static class actioncommand {
+        public static final String do_edit_cut = "do-edit-cut";
     }
 }
