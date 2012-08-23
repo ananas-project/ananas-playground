@@ -3,7 +3,6 @@ package test.servkit;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ananas.lib.servkit.json.parser.DefaultJsonHandler;
 import ananas.lib.servkit.json.parser.DefaultJsonParserFactory;
 import ananas.lib.servkit.json.parser.IJsonHandler;
 import ananas.lib.servkit.json.parser.IJsonParser;
@@ -15,7 +14,7 @@ public class TestJsonParser {
 		try {
 
 			IJsonParser parser = (new DefaultJsonParserFactory()).newParser();
-			IJsonHandler h = new DefaultJsonHandler();
+			IJsonHandler h = new TestingJsonHandler();
 
 			for (int i = 3; i > 0; i--) {
 				System.out.println("loop " + i + ":");

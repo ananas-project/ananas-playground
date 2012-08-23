@@ -9,10 +9,12 @@ class Impl_JsonParser implements IJsonParser {
 
 	private final IMyReader mReader;
 	private final IMyLocator mLocator;
+	private final StringBuilder mStringBuilder;
 
 	public Impl_JsonParser() {
 		this.mLocator = new MyLocator();
 		this.mReader = new MyReader(this.mLocator);
+		this.mStringBuilder = new StringBuilder(128);
 	}
 
 	@Override
@@ -91,10 +93,12 @@ class Impl_JsonParser implements IJsonParser {
 			if (ch == '.' || ch == '+' || ch == '-' || ch == 'e' || ch == 'E') {
 			} else if ('0' <= ch && ch <= '9') {
 			} else {
-				return;
+				break;
 			}
 			reader.readChar();
 		}
+
+		h.onInteger(0);
 
 		// throw new RuntimeException("not impl");
 
@@ -171,12 +175,78 @@ class Impl_JsonParser implements IJsonParser {
 	}
 
 	private String _parseStringImpl(IMyReader reader) throws IOException {
+		final StringBuilder sb = this._getStringBuilder();
 		reader.readAndCheck('"');
-		for (int ch = reader.getChar(); ch != '"'; ch = reader.getChar()) {
-			reader.readChar();
+		boolean isEscape = false;
+		for (;;) {
+			final char ch = (char) reader.readChar();
+			if (isEscape) {
+				isEscape = false;
+				char ch2;
+				switch (ch) {
+				case 'b':
+					ch2 = '\b';
+					break;
+				case 'f':
+					ch2 = '\f';
+					break;
+				case 'n':
+					ch2 = '\n';
+					break;
+				case 'r':
+					ch2 = '\r';
+					break;
+				case 't':
+					ch2 = '\t';
+					break;
+				case 'u': {
+					int u0 = this._charToDigitHex(reader.readChar()) * 0x1000;
+					int u1 = this._charToDigitHex(reader.readChar()) * 0x0100;
+					int u2 = this._charToDigitHex(reader.readChar()) * 0x0010;
+					int u3 = this._charToDigitHex(reader.readChar()) * 0x0001;
+					ch2 = (char) (u0 | u1 | u2 | u3);
+					break;
+				}
+				// case '"':
+				// case '\\':
+				// case '/':
+				default:
+					ch2 = (char) ch;
+				}
+				sb.append(ch2);
+			} else {
+				if (ch == '"') {
+					break;
+				} else if (ch == '\\') {
+					isEscape = true;
+				} else {
+					sb.append((char) ch);
+				}
+			}
 		}
-		reader.readAndCheck('"');
-		return "not impl";
+		// reader.readAndCheck('"');
+		return sb.toString();
+	}
+
+	private int _charToDigitHex(int ch) throws JsonException {
+		// char ch0 = (char) ch;
+		int ret;
+		if ('0' <= ch && ch <= '9') {
+			ret = ch - '0';
+		} else if ('a' <= ch && ch <= 'f') {
+			ret = ch - 'a' + 10;
+		} else if ('A' <= ch && ch <= 'F') {
+			ret = ch - 'A' + 10;
+		} else {
+			throw MyExceptions.defaultException;
+		}
+		return ret;
+	}
+
+	private StringBuilder _getStringBuilder() {
+		StringBuilder sb = this.mStringBuilder;
+		sb.setLength(0);
+		return sb;
 	}
 
 	private void _parseFalseNullTrue(IMyReader reader, String text,
@@ -252,6 +322,9 @@ class Impl_JsonParser implements IJsonParser {
 			// TODO to support utf-8
 			final int oldChar = this.mNextChar;
 			final int newChar = this.mIS.read();
+			if (oldChar < 0 && newChar < 0) {
+				throw MyExceptions.defaultException;
+			}
 			this.mNextChar = newChar;
 			this.mLocator.putChar((char) oldChar);
 			return oldChar;
