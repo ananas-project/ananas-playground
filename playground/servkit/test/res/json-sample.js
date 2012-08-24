@@ -24,7 +24,7 @@ var json = {
 
 		"chs" : "中文",
 
-		"escape" : "\b\f\n\r\t\u1234 \\ \" \/ ",
+		"escape" : "\b\f\n\r\t\u4321 \\ \" \/ ",
 
 		"end" : null
 	},

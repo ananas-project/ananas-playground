@@ -1,7 +1,7 @@
 package test.servkit;
 
-import ananas.lib.servkit.json.parser.IJsonHandler;
-import ananas.lib.servkit.json.parser.IJsonLocator;
+import ananas.lib.servkit.json.io.IJsonHandler;
+import ananas.lib.servkit.json.io.IJsonLocator;
 
 public class TestingJsonHandler implements IJsonHandler {
 
@@ -98,6 +98,12 @@ public class TestingJsonHandler implements IJsonHandler {
 	public void onNull() {
 		System.out.println("null");
 
+	}
+
+	@Override
+	public void onDocumentFinal() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,4 +1,4 @@
-package ananas.lib.servkit.json.parser;
+package ananas.lib.servkit.json.io;
 
 public interface IJsonLocator {
 

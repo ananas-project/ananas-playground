@@ -1,31 +1,45 @@
-var json =
+var json = {
 
-{
 	"basic" : {
 		"string" : "hello world",
-		"number" : 0,
+		"number" : 12345,
+
 		"obj" : {
+
 			"a" : "1",
 			"b" : "2",
 			"c" : "3",
 			"end" : null
+
 		},
+
 		"array" : [ "a", "b", "c", "end" ],
+
 		"true" : true,
 		"false" : false,
 		"null" : null
 	},
+
 	"strings" : {
-		"chs" : "ä¸­æ",
-		"escape" : "	ሴ \  / ",
+
+		"chs" : "中文",
+
+		"escape" : "\b\f\n\r\t\u4321 \\ \" \/ ",
+
 		"end" : null
 	},
+
 	"numbers" : {
-		"int" : 0,
-		"long" : 0,
-		"double" : 0,
-		"e" : 0,
-		"end" : null,
+
+		"int" : -123,
+		"long" : 1234567890123456,
+		"double" : -123.456789,
+		"e" : -1.2345e-10,
+
+		"end" : null
+
 	},
+
 	"end" : null
+
 }

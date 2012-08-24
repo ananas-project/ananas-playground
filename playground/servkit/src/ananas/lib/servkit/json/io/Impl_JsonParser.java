@@ -1,4 +1,4 @@
-package ananas.lib.servkit.json.parser;
+package ananas.lib.servkit.json.io;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +31,8 @@ class Impl_JsonParser implements IJsonParser {
 			h.onDocumentEnd();
 		} catch (Exception e) {
 			h.onException(e);
+		} finally {
+			h.onDocumentFinal();
 		}
 		this.mReader.bindInputStream(null);
 	}
@@ -86,21 +88,66 @@ class Impl_JsonParser implements IJsonParser {
 
 	private void _parseNumber(IMyReader reader, IJsonHandler h)
 			throws IOException {
-		// TODO Auto-generated method stub
 
-		for (int ch = reader.getChar();; ch = reader.getChar()) {
+		final StringBuilder sb = this._getStringBuilder();
+		int iE = -1;
+		boolean hasDot = false;
 
-			if (ch == '.' || ch == '+' || ch == '-' || ch == 'e' || ch == 'E') {
-			} else if ('0' <= ch && ch <= '9') {
-			} else {
+		for (int i = 0;; i++) {
+			int ch = reader.getChar();
+			boolean isNumber = false;
+			switch (ch) {
+			case '-':
+			case '+': {
+				isNumber = true;
 				break;
 			}
-			reader.readChar();
+			case '.': {
+				isNumber = true;
+				hasDot = true;
+				break;
+			}
+			case 'e':
+			case 'E': {
+				isNumber = true;
+				if (iE < 0) {
+					iE = i;
+				}
+				break;
+			}
+			default:
+				if ('0' <= ch && ch <= '9') {
+					isNumber = true;
+				}
+			}
+			if (!isNumber) {
+				break;
+			}
+			ch = reader.readChar();
+			sb.append((char) ch);
 		}
 
-		h.onInteger(0);
-
-		// throw new RuntimeException("not impl");
+		if (iE < 0) {
+			// no 'e'
+			if (hasDot) {
+				double n = Double.parseDouble(sb.toString());
+				h.onDouble(n);
+			} else {
+				long n = Long.parseLong(sb.toString());
+				if (Integer.MIN_VALUE <= n && n <= Integer.MAX_VALUE) {
+					h.onInteger((int) n);
+				} else {
+					h.onLong(n);
+				}
+			}
+		} else {
+			String s1 = sb.substring(0, iE);
+			String s2 = sb.substring(iE + 1);
+			double part1 = Double.parseDouble(s1);
+			int part2 = Integer.parseInt(s2);
+			double n = part1 * Math.pow(10, part2);
+			h.onDouble(n);
+		}
 
 	}
 

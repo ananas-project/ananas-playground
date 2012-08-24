@@ -3,35 +3,36 @@ package ananas.lib.servkit.json.object;
 import ananas.lib.servkit.json.JsonException;
 import ananas.lib.servkit.json.io.IJsonHandler;
 
-public class JsonString extends JsonValue implements IJsonString {
+public class JsonDouble extends JsonNumber implements IJsonDouble {
 
-	private String mData;
+	private double mValue;
 
-	@Override
-	public void setData(String s) {
-		this.mData = s;
+	public JsonDouble() {
 	}
 
 	@Override
-	public String getData() {
-		return this.mData;
+	public void setValue(double value) {
+		this.mValue = value;
+	}
+
+	@Override
+	public double getValue() {
+		return this.mValue;
 	}
 
 	@Override
 	public void onFree() {
 		super.onFree();
-		this.mData = null;
 	}
 
 	@Override
 	public void onAlloc() {
 		super.onAlloc();
-		this.mData = null;
+		this.mValue = 0;
 	}
 
 	@Override
 	public void output(IJsonHandler h) throws JsonException {
-		h.onString(this.mData);
+		h.onDouble(this.mValue);
 	}
-
 }

@@ -1,9 +1,8 @@
 package ananas.lib.servkit.pool;
 
-public interface IPool {
+public interface IPool extends IBasePool {
 
-	IPoolable alloc(Class<?> aClass);
+	Class<?> getTargetClass();
 
-	void free(IPoolable object);
-
+	int getSize();
 }
