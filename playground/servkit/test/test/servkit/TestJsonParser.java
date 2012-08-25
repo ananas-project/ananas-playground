@@ -7,8 +7,10 @@ import java.io.InputStream;
 
 import ananas.lib.servkit.json.io.DefaultJsonObjectBuilder;
 import ananas.lib.servkit.json.io.DefaultJsonParserFactory;
+import ananas.lib.servkit.json.io.DefaultJsonStreamWriter;
 import ananas.lib.servkit.json.io.IJsonHandler;
 import ananas.lib.servkit.json.io.IJsonParser;
+import ananas.lib.servkit.json.io.IJsonSerializer;
 import ananas.lib.servkit.json.object.JsonValue;
 
 public class TestJsonParser {
@@ -21,19 +23,22 @@ public class TestJsonParser {
 
 			IJsonParser parser = (new DefaultJsonParserFactory()).newParser();
 			DefaultJsonObjectBuilder h = new DefaultJsonObjectBuilder(pool);
+			IJsonSerializer serial = new DefaultJsonStreamWriter();
 
-			final int loops = 1000 * 50;
+			final int loops = 1000 * 5;
 			final long ts0 = System.currentTimeMillis();
 
 			byte[] ba = this._prepareData();
 
 			for (int i = loops; i > 0; i--) {
-				// System.out.println("loop " + i + ":");
+
+				System.out.println("loop " + i + ":");
 				ByteArrayInputStream bais = new ByteArrayInputStream(ba);
 				this._run(parser, bais, h);
 				// System.out.println();
 
 				JsonValue root = (JsonValue) h.getRoot();
+				serial.serialize(System.out, root);
 				root.free();
 			}
 			final long ts1 = System.currentTimeMillis();
