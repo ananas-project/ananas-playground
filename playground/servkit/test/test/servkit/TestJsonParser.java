@@ -27,17 +27,18 @@ public class TestJsonParser {
 			DefaultJsonObjectBuilder h = new DefaultJsonObjectBuilder(pool);
 			IJsonSerializer serial = new DefaultJsonStreamWriter();
 
-			final int loops = 1000 * 1;
+			final int loops = 1000 * 10;
 			final long ts0 = System.currentTimeMillis();
 
 			byte[] ba = this._prepareData();
 
-			// OutputStream os = this._getVirtualOutput();
-			OutputStream os = System.out;
+			OutputStream os;
+			os = this._getVirtualOutput();
+			// os = System.out;
 
 			for (int i = loops; i > 0; i--) {
 
-				System.out.println("loop " + i + ":");
+				// System.out.println("loop " + i + ":");
 				ByteArrayInputStream bais = new ByteArrayInputStream(ba);
 				this._run(parser, bais, h);
 				// System.out.println();
