@@ -1,5 +1,4 @@
 var json =
-
 {
 	"numbers" : {
 		"e" : -1.2345E-10,
@@ -25,7 +24,7 @@ var json =
 	"strings" : {
 		"chs" : "中文",
 		"end" : null,
-		"escape" : "	! \  / "
+		"escape" : "\b\f\n\r\t! \\ \" \/ "
 	},
 	"end" : null
 }

@@ -2,50 +2,13 @@ package ananas.lib.servkit.json.object;
 
 import ananas.lib.servkit.json.JsonException;
 import ananas.lib.servkit.json.io.IJsonHandler;
-import ananas.lib.servkit.pool.IPool;
+import ananas.lib.servkit.pool.AbstractPoolingProbe;
 import ananas.lib.servkit.pool.IPoolable;
+import ananas.lib.servkit.pool.IProbe;
 
-public abstract class JsonValue implements IJsonValue, IPoolable {
-
-	private IPool mPool;
-	private boolean mIsFree = true;
+public abstract class JsonValue implements IJsonValue {
 
 	protected JsonValue() {
-	}
-
-	@Override
-	public void onFree() {
-		this.mIsFree = true;
-	}
-
-	@Override
-	public void onAlloc() {
-		this.mIsFree = false;
-	}
-
-	@Override
-	public void free() {
-		if (!this.mIsFree) {
-			this.onFree();
-			this.mPool.dealloc(this);
-		}
-	}
-
-	@Override
-	public boolean isFree() {
-		return this.mIsFree;
-	}
-
-	@Override
-	public void bindToPool(IPool pool) {
-		if (this.mPool == null) {
-			this.mPool = pool;
-		}
-	}
-
-	@Override
-	public IPool getPool() {
-		return this.mPool;
 	}
 
 	private static class JsonNull extends JsonValue {
@@ -54,6 +17,7 @@ public abstract class JsonValue implements IJsonValue, IPoolable {
 		public void output(IJsonHandler h) throws JsonException {
 			h.onNull();
 		}
+
 	}
 
 	private static class JsonTrue extends JsonValue {
@@ -62,6 +26,7 @@ public abstract class JsonValue implements IJsonValue, IPoolable {
 		public void output(IJsonHandler h) throws JsonException {
 			h.onBoolean(true);
 		}
+
 	}
 
 	private static class JsonFalse extends JsonValue {
@@ -70,6 +35,7 @@ public abstract class JsonValue implements IJsonValue, IPoolable {
 		public void output(IJsonHandler h) throws JsonException {
 			h.onBoolean(false);
 		}
+
 	}
 
 	public final static JsonValue value_true = new JsonTrue();
@@ -78,5 +44,42 @@ public abstract class JsonValue implements IJsonValue, IPoolable {
 
 	@Override
 	public abstract void output(IJsonHandler h) throws JsonException;
+
+	protected void onAlloc() {
+	}
+
+	protected void onFree() {
+	}
+
+	@Override
+	public void free() {
+		this.mProbe.free();
+	}
+
+	private final IProbe mProbe = new AbstractPoolingProbe() {
+
+		@Override
+		public void onAlloc() {
+			super.onAlloc();
+			JsonValue.this.onAlloc();
+		}
+
+		@Override
+		public void onFree() {
+			super.onFree();
+			JsonValue.this.onFree();
+		}
+
+		@Override
+		public IPoolable toPoolable() {
+			return JsonValue.this;
+		}
+
+	};
+
+	@Override
+	public IProbe toProbe() {
+		return this.mProbe;
+	}
 
 }

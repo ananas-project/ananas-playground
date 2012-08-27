@@ -22,12 +22,12 @@ public class JsonInteger extends JsonNumber implements IJsonInteger {
 
 	@Override
 	public void onFree() {
-		super.onFree();
+
 	}
 
 	@Override
 	public void onAlloc() {
-		super.onAlloc();
+
 		this.mValue = 0;
 	}
 

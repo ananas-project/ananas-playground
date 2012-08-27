@@ -18,20 +18,20 @@ public class JsonString extends JsonValue implements IJsonString {
 	}
 
 	@Override
-	public void onFree() {
-		super.onFree();
-		this.mData = null;
-	}
-
-	@Override
-	public void onAlloc() {
-		super.onAlloc();
-		this.mData = null;
-	}
-
-	@Override
 	public void output(IJsonHandler h) throws JsonException {
 		h.onString(this.mData);
+	}
+
+	@Override
+	protected void onAlloc() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onFree() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

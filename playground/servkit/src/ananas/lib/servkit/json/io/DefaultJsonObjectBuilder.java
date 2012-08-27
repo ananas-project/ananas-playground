@@ -11,17 +11,17 @@ import ananas.lib.servkit.json.object.IJsonLong;
 import ananas.lib.servkit.json.object.IJsonObject;
 import ananas.lib.servkit.json.object.IJsonString;
 import ananas.lib.servkit.json.object.IJsonValue;
-import ananas.lib.servkit.pool.IBasePool;
+import ananas.lib.servkit.pool.IPool;
 
 public class DefaultJsonObjectBuilder implements IJsonObjectBuilder {
 
-	private final IBasePool mPool;
+	private final IPool mPool;
 	private IJsonValue mRoot;
 	private final Stack<IJsonValue> mStack;
 	private IJsonLocator mLocator;
 	private String mCurKey;
 
-	public DefaultJsonObjectBuilder(IBasePool pool) {
+	public DefaultJsonObjectBuilder(IPool pool) {
 		this.mPool = pool;
 		this.mStack = new Stack<IJsonValue>();
 	}
@@ -167,7 +167,7 @@ public class DefaultJsonObjectBuilder implements IJsonObjectBuilder {
 	}
 
 	@Override
-	public IBasePool getPool() {
+	public IPool getPool() {
 		return this.mPool;
 	}
 

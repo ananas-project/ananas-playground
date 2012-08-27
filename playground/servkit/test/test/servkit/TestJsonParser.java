@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import ananas.lib.servkit.json.io.DefaultJsonObjectBuilder;
 import ananas.lib.servkit.json.io.DefaultJsonParserFactory;
@@ -12,6 +13,7 @@ import ananas.lib.servkit.json.io.IJsonHandler;
 import ananas.lib.servkit.json.io.IJsonParser;
 import ananas.lib.servkit.json.io.IJsonSerializer;
 import ananas.lib.servkit.json.object.JsonValue;
+import ananas.lib.servkit.pool.IPool;
 
 public class TestJsonParser {
 
@@ -19,16 +21,19 @@ public class TestJsonParser {
 
 		try {
 
-			MyPoolSet pool = new MyPoolSet();
+			IPool pool = MyPoolSet.newInstance();
 
 			IJsonParser parser = (new DefaultJsonParserFactory()).newParser();
 			DefaultJsonObjectBuilder h = new DefaultJsonObjectBuilder(pool);
 			IJsonSerializer serial = new DefaultJsonStreamWriter();
 
-			final int loops = 1000 * 5;
+			final int loops = 1000 * 1;
 			final long ts0 = System.currentTimeMillis();
 
 			byte[] ba = this._prepareData();
+
+			// OutputStream os = this._getVirtualOutput();
+			OutputStream os = System.out;
 
 			for (int i = loops; i > 0; i--) {
 
@@ -38,7 +43,7 @@ public class TestJsonParser {
 				// System.out.println();
 
 				JsonValue root = (JsonValue) h.getRoot();
-				serial.serialize(System.out, root);
+				serial.serialize(os, root);
 				root.free();
 			}
 			final long ts1 = System.currentTimeMillis();
@@ -51,6 +56,15 @@ public class TestJsonParser {
 			e.printStackTrace();
 		}
 
+	}
+
+	private OutputStream _getVirtualOutput() {
+		return new OutputStream() {
+
+			@Override
+			public void write(int b) throws IOException {
+			}
+		};
 	}
 
 	private byte[] _prepareData() throws IOException {

@@ -20,7 +20,7 @@ public class JsonArray extends JsonValue implements IJsonArray {
 
 	@Override
 	public void onFree() {
-		super.onFree();
+
 		for (JsonValue item : this.mArray) {
 			item.free();
 		}
@@ -29,7 +29,7 @@ public class JsonArray extends JsonValue implements IJsonArray {
 
 	@Override
 	public void onAlloc() {
-		super.onAlloc();
+
 		this.mArray.clear();
 	}
 
@@ -40,6 +40,24 @@ public class JsonArray extends JsonValue implements IJsonArray {
 			item.output(h);
 		}
 		h.onArrayEnd();
+	}
+
+	@Override
+	public int count() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public IJsonValue get(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

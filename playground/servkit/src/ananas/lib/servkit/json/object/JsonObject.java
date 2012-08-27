@@ -20,7 +20,6 @@ public class JsonObject extends JsonValue implements IJsonObject {
 
 	@Override
 	public void onFree() {
-		super.onFree();
 		for (JsonValue item : this.mTable.values()) {
 			item.free();
 		}
@@ -29,7 +28,6 @@ public class JsonObject extends JsonValue implements IJsonObject {
 
 	@Override
 	public void onAlloc() {
-		super.onAlloc();
 		this.mTable.clear();
 	}
 
@@ -41,5 +39,23 @@ public class JsonObject extends JsonValue implements IJsonObject {
 			item.getValue().output(h);
 		}
 		h.onObjectEnd();
+	}
+
+	@Override
+	public IJsonValue get(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Object allKeys() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

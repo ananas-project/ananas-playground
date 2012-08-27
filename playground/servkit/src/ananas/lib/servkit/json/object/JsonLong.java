@@ -22,12 +22,10 @@ public class JsonLong extends JsonNumber implements IJsonLong {
 
 	@Override
 	public void onFree() {
-		super.onFree();
 	}
 
 	@Override
 	public void onAlloc() {
-		super.onAlloc();
 		this.mValue = 0;
 	}
 
