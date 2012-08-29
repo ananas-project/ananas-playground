@@ -28,6 +28,10 @@ public class EPoolObjectBase extends DefaultElement {
 		if (classRef.startsWith("#")) {
 			ElementImport aImport = (ElementImport) this.getOwnerDocument()
 					.findElementById(classRef.substring(1));
+			if (aImport == null) {
+				throw new RuntimeException("cannot find the import of class:"
+						+ classRef);
+			}
 			cls = aImport.importClass();
 		} else {
 			try {
