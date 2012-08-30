@@ -1,16 +1,24 @@
 package ananas.lib.servkit.pool.bpr;
 
 import ananas.lib.blueprint.elements.reflect.ReflectElement;
-import ananas.lib.servkit.pool.IClassPoolFactory;
 import ananas.lib.servkit.pool.IPool;
+import ananas.lib.servkit.pool.IPoolableFactory;
+import ananas.lib.servkit.pool.ISinglePoolFactory;
 
 public class BprPool implements IBprPool {
 
+	// the product of this class is ISinglePool
+
 	private ReflectElement mElement;
-	private Class<?> mTargetClass;
-	private Class<?> mItemClass;
 	private int mSize;
 	private boolean mResetable;
+	//
+	private String mItemFactoryRef;
+	private String mTargetClassRef;
+	private String mItemClassRef;
+	//
+	private Class<?> mTargetClass;
+	private Class<?> mItemClass;
 
 	public boolean bind(Object element) {
 		if (element instanceof ReflectElement) {
@@ -22,13 +30,15 @@ public class BprPool implements IBprPool {
 	}
 
 	public void setClass(String s) {
-		this.mTargetClass = this.mElement.findClass(s);
-		// System.out.println(this.mTargetClass);
+		this.mTargetClassRef = s;
 	}
 
 	public void setItemClass(String s) {
-		this.mItemClass = this.mElement.findClass(s);
-		// System.out.println(this.mItemClass);
+		this.mItemClassRef = s;
+	}
+
+	public void setItemFactory(String s) {
+		this.mItemFactoryRef = s;
 	}
 
 	public void setSize(String s) {
@@ -42,14 +52,26 @@ public class BprPool implements IBprPool {
 	@Override
 	public IPool createPool() {
 		try {
-			this.mElement = null;
-			IClassPoolFactory pf = (IClassPoolFactory) this.mTargetClass
-					.newInstance();
-			return pf.newPool(this.mItemClass, this.mSize, this.mResetable);
+
+			ISinglePoolFactory pf = this._getPoolFactory();
+			IPoolableFactory itemFactory = this._getItemFactory();
+			int size = this.mSize;
+			boolean resetable = this.mResetable;
+			return pf.newPool(itemFactory, size, resetable);
+
 		} catch (Exception e) {
-			// e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+
+	private ISinglePoolFactory _getPoolFactory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private IPoolableFactory _getItemFactory() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

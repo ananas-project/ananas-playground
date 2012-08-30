@@ -1,16 +1,11 @@
 package ananas.lib.servkit.pool;
 
-public class DefaultCachedPoolFactory implements IClassPoolFactory {
+public class DefaultCachedPoolFactory implements ISinglePoolFactory {
 
-	@Override
-	public IClassPool newPool(Class<?> aClass, int size, boolean resetable) {
-		return new MyPool(aClass, size, resetable);
-	}
-
-	private class MyPool implements IClassPool {
+	private class MyPool implements ISinglePool {
 
 		private final int mSize;
-		private final Class<?> mClass;
+		private final IPoolableFactory mItemFactory;
 		private final boolean mResetable;
 		private final IProbe[] mArrayAll;
 		private final IProbe[] mArrayFree;
@@ -18,10 +13,10 @@ public class DefaultCachedPoolFactory implements IClassPoolFactory {
 		private int mCountFree;
 		private int mDebugCountNew;
 
-		public MyPool(Class<?> aClass, int size, boolean resetable) {
+		public MyPool(IPoolableFactory itemFactory, int size, boolean resetable) {
 
 			this.mSize = size;
-			this.mClass = aClass;
+			this.mItemFactory = itemFactory;
 			this.mResetable = resetable;
 
 			this.mArrayAll = new IProbe[size];
@@ -33,9 +28,6 @@ public class DefaultCachedPoolFactory implements IClassPoolFactory {
 
 		@Override
 		public IPoolable alloc(Class<?> aClass) {
-			if (!this.mClass.equals(aClass)) {
-				return null;
-			}
 			IProbe obj = this._alloc();
 			obj.onAlloc();
 			return obj.toPoolable();
@@ -72,11 +64,6 @@ public class DefaultCachedPoolFactory implements IClassPoolFactory {
 		}
 
 		@Override
-		public Class<?> getPoolableClass() {
-			return this.mClass;
-		}
-
-		@Override
 		public int getSize() {
 			return this.mSize;
 		}
@@ -95,7 +82,7 @@ public class DefaultCachedPoolFactory implements IClassPoolFactory {
 
 		private IProbe _PureNew() {
 			try {
-				IPoolable poolable = (IPoolable) this.mClass.newInstance();
+				IPoolable poolable = this.mItemFactory.newObject();
 				IProbe probe = poolable.toProbe();
 				if (this.mCountAll < this.mSize) {
 					this.mArrayAll[this.mCountAll++] = probe;
@@ -103,7 +90,7 @@ public class DefaultCachedPoolFactory implements IClassPoolFactory {
 				if (Debug.showInfo) {
 					int cnt = ++this.mDebugCountNew;
 					String pool = this + "";
-					String obj = this.mClass.getName();
+					String obj = this.mItemFactory.toString();
 					System.err.println(pool + " -> " + obj + ".new(); count:"
 							+ cnt);
 				}
@@ -113,6 +100,12 @@ public class DefaultCachedPoolFactory implements IClassPoolFactory {
 			}
 			return null;
 		}
+	}
+
+	@Override
+	public ISinglePool newPool(IPoolableFactory itemFactory, int size,
+			boolean resetable) {
+		return new MyPool(itemFactory, size, resetable);
 	}
 
 }

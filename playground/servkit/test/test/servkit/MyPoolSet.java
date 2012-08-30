@@ -6,10 +6,12 @@ import ananas.lib.servkit.pool.DefaultFixedPoolFactory;
 import ananas.lib.servkit.pool.DefaultSafeCachedPoolFactory;
 import ananas.lib.servkit.pool.DefaultSafeFixedPoolFactory;
 import ananas.lib.servkit.pool.DefaultSafePoolGroupFactory;
-import ananas.lib.servkit.pool.IClassPoolFactory;
 import ananas.lib.servkit.pool.IPool;
 import ananas.lib.servkit.pool.IPoolGroup;
 import ananas.lib.servkit.pool.IPoolGroupFactory;
+import ananas.lib.servkit.pool.IPoolableFactory;
+import ananas.lib.servkit.pool.ISinglePool;
+import ananas.lib.servkit.pool.ISinglePoolFactory;
 
 public class MyPoolSet {
 
@@ -19,7 +21,7 @@ public class MyPoolSet {
 		int size = 20;
 
 		IPoolGroupFactory pgf = new DefaultSafePoolGroupFactory();
-		IClassPoolFactory cpf = null;
+		ISinglePoolFactory cpf = null;
 
 		switch (poolType) {
 		case 1:
@@ -38,16 +40,24 @@ public class MyPoolSet {
 
 		IPoolGroup group = pgf.newPoolGroup();
 
-		group.addPool(cpf.newPool(JSON.class_array, size, false));
-		group.addPool(cpf.newPool(JSON.class_object, size, false));
+		// //////////////
 
-		group.addPool(cpf.newPool(JSON.class_string, size, false));
-
-		group.addPool(cpf.newPool(JSON.class_long, size, false));
-		group.addPool(cpf.newPool(JSON.class_int, size, false));
-		group.addPool(cpf.newPool(JSON.class_double, size, false));
+		_addPool(group, cpf, JSON.class_array, size, false);
+		_addPool(group, cpf, JSON.class_object, size, false);
+		_addPool(group, cpf, JSON.class_string, size, false);
+		_addPool(group, cpf, JSON.class_long, size, false);
+		_addPool(group, cpf, JSON.class_int, size, false);
+		_addPool(group, cpf, JSON.class_double, size, false);
 
 		return group;
+	}
+
+	private static void _addPool(IPoolGroup group, ISinglePoolFactory pf,
+			Class<?> aClass, int size, boolean resetable) {
+
+		IPoolableFactory itemFactory = null;
+		ISinglePool pool = pf.newPool(itemFactory, size, resetable);
+		group.addPool(aClass, pool);
 	}
 
 }

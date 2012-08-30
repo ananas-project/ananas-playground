@@ -1,15 +1,10 @@
 package ananas.lib.servkit.pool;
 
-public class DefaultSafeFixedPoolFactory implements IClassPoolFactory {
+public class DefaultSafeFixedPoolFactory implements ISinglePoolFactory {
 
-	@Override
-	public IClassPool newPool(Class<?> aClass, int size, boolean resetable) {
-		return new MyPool(aClass, size, resetable);
-	}
+	private class MyPool implements ISinglePool {
 
-	private class MyPool implements IClassPool {
-
-		private final Class<?> mClass;
+		private final IPoolableFactory mItemFactory;
 		private final int mSize;
 		private final boolean mResetable;
 
@@ -19,8 +14,8 @@ public class DefaultSafeFixedPoolFactory implements IClassPoolFactory {
 		private int mCountAll;
 		private int mDebugCountNew;
 
-		public MyPool(Class<?> aClass, int size, boolean resetable) {
-			this.mClass = aClass;
+		public MyPool(IPoolableFactory itemFactory, int size, boolean resetable) {
+			this.mItemFactory = itemFactory;
 			this.mSize = size;
 			this.mResetable = resetable;
 
@@ -31,7 +26,7 @@ public class DefaultSafeFixedPoolFactory implements IClassPoolFactory {
 
 		@Override
 		public IPoolable alloc(Class<?> aClass) {
-			if (!this.mClass.equals(aClass)) {
+			if (!this.mItemFactory.equals(aClass)) {
 				return null;
 			}
 			IProbe pb = this._alloc();
@@ -58,7 +53,7 @@ public class DefaultSafeFixedPoolFactory implements IClassPoolFactory {
 				return null;
 			IProbe pb = null;
 			try {
-				IPoolable pa = (IPoolable) this.mClass.newInstance();
+				IPoolable pa = this.mItemFactory.newObject();
 				pb = pa.toProbe();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -70,7 +65,7 @@ public class DefaultSafeFixedPoolFactory implements IClassPoolFactory {
 			if (Debug.showInfo) {
 				int cnt = (++this.mDebugCountNew);
 				String pool = this + "";
-				String obj = this.mClass.getName();
+				String obj = this.mItemFactory.toString();
 				System.err
 						.println(pool + " -> " + obj + ".new(); count:" + cnt);
 			}
@@ -94,11 +89,6 @@ public class DefaultSafeFixedPoolFactory implements IClassPoolFactory {
 		}
 
 		@Override
-		public Class<?> getPoolableClass() {
-			return this.mClass;
-		}
-
-		@Override
 		public int getSize() {
 			return this.mSize;
 		}
@@ -114,6 +104,12 @@ public class DefaultSafeFixedPoolFactory implements IClassPoolFactory {
 				}
 			}
 		}
+	}
+
+	@Override
+	public ISinglePool newPool(IPoolableFactory itemFactory, int size,
+			boolean resetable) {
+		return new MyPool(itemFactory, size, resetable);
 	}
 
 }

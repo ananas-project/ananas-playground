@@ -12,24 +12,23 @@ public class DefaultSafePoolGroupFactory implements IPoolGroupFactory {
 
 	private class MyPoolGroup implements IPoolGroup {
 
-		private final Map<Class<?>, IClassPool> mTable;
+		private final Map<Class<?>, IPool> mTable;
 
 		public MyPoolGroup() {
-			this.mTable = new Hashtable<Class<?>, IClassPool>();
+			this.mTable = new Hashtable<Class<?>, IPool>();
 		}
 
 		@Override
 		public IPoolable alloc(Class<?> aClass) {
-			IClassPool pool = this.mTable.get(aClass);
+			IPool pool = this.mTable.get(aClass);
 			if (pool == null)
 				return null;
 			return pool.alloc(aClass);
 		}
 
 		@Override
-		public void addPool(IClassPool pool) {
-			Class<?> cls = pool.getPoolableClass();
-			this.mTable.put(cls, pool);
+		public void addPool(Class<?> aClass, IPool pool) {
+			this.mTable.put(aClass, pool);
 		}
 
 	}
