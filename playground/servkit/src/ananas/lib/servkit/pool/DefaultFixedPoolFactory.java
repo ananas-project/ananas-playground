@@ -26,9 +26,6 @@ public class DefaultFixedPoolFactory implements ISinglePoolFactory {
 
 		@Override
 		public IPoolable alloc(Class<?> aClass) {
-			if (!this.mItemFactory.equals(aClass)) {
-				return null;
-			}
 			IProbe pb = this._alloc();
 			if (pb == null)
 				return null;

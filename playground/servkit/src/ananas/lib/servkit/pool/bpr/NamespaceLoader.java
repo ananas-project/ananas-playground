@@ -16,7 +16,7 @@ public class NamespaceLoader extends AbstractReflectNamespaceLoader {
 
 		reg.reg("factory", BprPoolFactory.class);
 		reg.reg("group", BprPoolGroup.class);
-		reg.reg("pool", BprPool.class);
+		reg.reg("pool", BprSinglePool.class);
 	}
 
 }

@@ -5,7 +5,9 @@ import java.util.Vector;
 
 import ananas.lib.blueprint.elements.reflect.ReflectElement;
 import ananas.lib.servkit.pool.IPool;
+import ananas.lib.servkit.pool.IPoolGroup;
 import ananas.lib.servkit.pool.IPoolGroupFactory;
+import ananas.lib.servkit.pool.ISinglePool;
 
 public class BprPoolGroup implements IBprPool {
 
@@ -42,10 +44,16 @@ public class BprPoolGroup implements IBprPool {
 	@Override
 	public IPool createPool() {
 		try {
-			this.mElement = null;
+			// this.mElement = null;
 			IPoolGroupFactory pf = (IPoolGroupFactory) this.mTargetClass
 					.newInstance();
-			return pf.newPoolGroup();
+			IPoolGroup group = pf.newPoolGroup();
+			for (IBprPool bprPool : this.mList) {
+				IPool pool = bprPool.createPool();
+				Class<?> aClass = ((ISinglePool) pool).getClass();
+				group.addPool(aClass, pool);
+			}
+			return group;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

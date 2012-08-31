@@ -28,9 +28,6 @@ public class DefaultSafeCachedPoolFactory implements ISinglePoolFactory {
 
 		@Override
 		public IPoolable alloc(Class<?> aClass) {
-			if (!this.mItemFactory.equals(aClass)) {
-				return null;
-			}
 			IProbe obj = this._alloc();
 			obj.onAlloc();
 			return obj.toPoolable();
