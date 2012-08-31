@@ -25,20 +25,30 @@ public abstract class JsonValue implements IJsonValue {
 
 	}
 
-	private static class JsonTrue extends JsonValue {
+	private static class JsonTrue extends JsonValue implements IJsonBoolean {
 
 		@Override
 		public void output(IJsonHandler h) throws JsonException {
 			h.onBoolean(true);
 		}
 
+		@Override
+		public boolean getValue() {
+			return true;
+		}
+
 	}
 
-	private static class JsonFalse extends JsonValue {
+	private static class JsonFalse extends JsonValue implements IJsonBoolean {
 
 		@Override
 		public void output(IJsonHandler h) throws JsonException {
 			h.onBoolean(false);
+		}
+
+		@Override
+		public boolean getValue() {
+			return false;
 		}
 
 	}
