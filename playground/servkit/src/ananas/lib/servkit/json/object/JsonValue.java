@@ -2,13 +2,18 @@ package ananas.lib.servkit.json.object;
 
 import ananas.lib.servkit.json.JsonException;
 import ananas.lib.servkit.json.io.IJsonHandler;
+import ananas.lib.servkit.monitor.IMonitorProbe;
+import ananas.lib.servkit.monitor.MonitorAgent;
 import ananas.lib.servkit.pool.AbstractPoolingProbe;
 import ananas.lib.servkit.pool.IPoolable;
 import ananas.lib.servkit.pool.IProbe;
 
 public abstract class JsonValue implements IJsonValue {
 
+	private final IMonitorProbe mMoProbe;
+
 	protected JsonValue() {
+		this.mMoProbe = MonitorAgent.getAgent().newProbe(this);
 	}
 
 	private static class JsonNull extends JsonValue {
@@ -46,9 +51,11 @@ public abstract class JsonValue implements IJsonValue {
 	public abstract void output(IJsonHandler h) throws JsonException;
 
 	protected void onAlloc() {
+		this.mMoProbe.print("onAlloc");
 	}
 
 	protected void onFree() {
+		this.mMoProbe.print("onFree");
 	}
 
 	@Override

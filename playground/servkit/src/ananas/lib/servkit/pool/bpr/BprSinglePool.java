@@ -6,7 +6,7 @@ import ananas.lib.servkit.pool.IPoolable;
 import ananas.lib.servkit.pool.IPoolableFactory;
 import ananas.lib.servkit.pool.ISinglePoolFactory;
 
-public class BprSinglePool implements IBprPool {
+public class BprSinglePool implements IBprPool, IBprPoolableClassProvider {
 
 	// the product of this class is ISinglePool
 
@@ -147,5 +147,10 @@ public class BprSinglePool implements IBprPool {
 				throw new RuntimeException(e);
 			}
 		}
+	}
+
+	@Override
+	public Class<?> getPoolableClass() {
+		return this._getPoolableClass();
 	}
 }

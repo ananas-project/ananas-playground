@@ -1,5 +1,8 @@
 package ananas.lib.servkit.pool;
 
+import ananas.lib.servkit.monitor.IMonitorProbe;
+import ananas.lib.servkit.monitor.MonitorAgent;
+
 public class DefaultSafeFixedPoolFactory implements ISinglePoolFactory {
 
 	private class MyPool implements ISinglePool {
@@ -12,7 +15,8 @@ public class DefaultSafeFixedPoolFactory implements ISinglePoolFactory {
 		private final IProbe[] mArrayFree; // work as a stack
 		private int mCountFree;
 		private int mCountAll;
-		private int mDebugCountNew;
+
+		private final IMonitorProbe mMoProbe;
 
 		public MyPool(IPoolableFactory itemFactory, int size, boolean resetable) {
 			this.mItemFactory = itemFactory;
@@ -22,6 +26,7 @@ public class DefaultSafeFixedPoolFactory implements ISinglePoolFactory {
 			this.mArrayAll = new IProbe[size];
 			this.mArrayFree = new IProbe[size];
 
+			this.mMoProbe = MonitorAgent.getAgent().newProbe(this);
 		}
 
 		@Override
@@ -48,23 +53,12 @@ public class DefaultSafeFixedPoolFactory implements ISinglePoolFactory {
 			final int index = this.mCountAll;
 			if (index >= this.mSize || index < 0)
 				return null;
-			IProbe pb = null;
-			try {
-				IPoolable pa = this.mItemFactory.newObject();
-				pb = pa.toProbe();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (pb == null)
-				return null;
+			final IPoolable poolable = this.mItemFactory.newObject();
+			final IProbe pb = poolable.toProbe();
 			this.mArrayAll[index] = pb;
 			this.mCountAll = index + 1;
-			if (Debug.showInfo) {
-				int cnt = (++this.mDebugCountNew);
-				String pool = this + "";
-				String obj = this.mItemFactory.toString();
-				System.err
-						.println(pool + " -> " + obj + ".new(); count:" + cnt);
+			if (this.mMoProbe.enable()) {
+				this.mMoProbe.print("new " + poolable);
 			}
 			return pb;
 		}

@@ -4,6 +4,4 @@ public interface ISinglePool extends IPool {
 
 	int getSize();
 
-	void reset();
-
 }

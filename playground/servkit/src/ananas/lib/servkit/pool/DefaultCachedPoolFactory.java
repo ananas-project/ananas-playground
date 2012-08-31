@@ -1,5 +1,8 @@
 package ananas.lib.servkit.pool;
 
+import ananas.lib.servkit.monitor.IMonitorProbe;
+import ananas.lib.servkit.monitor.MonitorAgent;
+
 public class DefaultCachedPoolFactory implements ISinglePoolFactory {
 
 	private class MyPool implements ISinglePool {
@@ -11,7 +14,7 @@ public class DefaultCachedPoolFactory implements ISinglePoolFactory {
 		private final IProbe[] mArrayFree;
 		private int mCountAll;
 		private int mCountFree;
-		private int mDebugCountNew;
+		private final IMonitorProbe mMoProbe;
 
 		public MyPool(IPoolableFactory itemFactory, int size, boolean resetable) {
 
@@ -24,6 +27,8 @@ public class DefaultCachedPoolFactory implements ISinglePoolFactory {
 
 			this.mCountAll = 0;
 			this.mCountFree = 0;
+
+			this.mMoProbe = MonitorAgent.getAgent().newProbe(this);
 		}
 
 		@Override
@@ -87,12 +92,8 @@ public class DefaultCachedPoolFactory implements ISinglePoolFactory {
 				if (this.mCountAll < this.mSize) {
 					this.mArrayAll[this.mCountAll++] = probe;
 				}
-				if (Debug.showInfo) {
-					int cnt = ++this.mDebugCountNew;
-					String pool = this + "";
-					String obj = this.mItemFactory.toString();
-					System.err.println(pool + " -> " + obj + ".new(); count:"
-							+ cnt);
+				if (this.mMoProbe.enable()) {
+					this.mMoProbe.print("new " + poolable);
 				}
 				return probe;
 			} catch (Exception e) {
