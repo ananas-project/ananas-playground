@@ -24,14 +24,13 @@ public class JsonString extends JsonValue implements IJsonString {
 
 	@Override
 	protected void onAlloc() {
-		// TODO Auto-generated method stub
-		
+		this.mData = null;
 	}
 
 	@Override
 	protected void onFree() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

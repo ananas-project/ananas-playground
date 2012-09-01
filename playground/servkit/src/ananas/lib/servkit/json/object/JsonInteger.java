@@ -27,7 +27,6 @@ public class JsonInteger extends JsonNumber implements IJsonInteger {
 
 	@Override
 	public void onAlloc() {
-
 		this.mValue = 0;
 	}
 

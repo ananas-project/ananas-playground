@@ -27,7 +27,6 @@ public class JsonDouble extends JsonNumber implements IJsonDouble {
 
 	@Override
 	public void onAlloc() {
-
 		this.mValue = 0;
 	}
 

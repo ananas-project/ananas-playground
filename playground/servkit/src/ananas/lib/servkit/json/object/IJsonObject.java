@@ -1,5 +1,7 @@
 package ananas.lib.servkit.json.object;
 
+import java.util.Set;
+
 public interface IJsonObject extends IJsonValue {
 
 	void put(String key, IJsonValue value);
@@ -8,6 +10,6 @@ public interface IJsonObject extends IJsonValue {
 
 	void clear();
 
-	Object allKeys();
+	Set<String> allKeys();
 
 }

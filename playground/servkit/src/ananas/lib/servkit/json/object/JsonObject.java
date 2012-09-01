@@ -2,6 +2,7 @@ package ananas.lib.servkit.json.object;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import ananas.lib.servkit.json.JsonException;
 import ananas.lib.servkit.json.io.IJsonHandler;
@@ -43,19 +44,16 @@ public class JsonObject extends JsonValue implements IJsonObject {
 
 	@Override
 	public IJsonValue get(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.mTable.get(key);
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-
+		this.mTable.clear();
 	}
 
 	@Override
-	public Object allKeys() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<String> allKeys() {
+		return this.mTable.keySet();
 	}
 }

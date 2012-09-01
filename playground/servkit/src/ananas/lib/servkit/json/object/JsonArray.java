@@ -44,20 +44,17 @@ public class JsonArray extends JsonValue implements IJsonArray {
 
 	@Override
 	public int count() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.mArray.size();
 	}
 
 	@Override
 	public IJsonValue get(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.mArray.get(index);
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-
+		this.mArray.clear();
 	}
 
 }
