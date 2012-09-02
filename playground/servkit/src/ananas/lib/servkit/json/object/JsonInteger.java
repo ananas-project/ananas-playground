@@ -35,4 +35,21 @@ public class JsonInteger extends JsonNumber implements IJsonInteger {
 		h.onInteger(mValue);
 	}
 
+	@Override
+	public int getIntValue() {
+		return this.mValue;
+		// throw new RuntimeException("the value out of range : " +
+		// this.mValue);
+	}
+
+	@Override
+	public long getLongValue() {
+		return this.mValue;
+	}
+
+	@Override
+	public double getDoubleValue() {
+		return this.mValue;
+	}
+
 }

@@ -33,4 +33,20 @@ public class JsonLong extends JsonNumber implements IJsonLong {
 	public void output(IJsonHandler h) throws JsonException {
 		h.onLong(mValue);
 	}
+
+	@Override
+	public int getIntValue() {
+		// return this.mValue ;
+		throw new RuntimeException("the value out of range : " + this.mValue);
+	}
+
+	@Override
+	public long getLongValue() {
+		return this.mValue;
+	}
+
+	@Override
+	public double getDoubleValue() {
+		return this.mValue;
+	}
 }

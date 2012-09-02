@@ -19,7 +19,12 @@ public class JsonString extends JsonValue implements IJsonString {
 
 	@Override
 	public void output(IJsonHandler h) throws JsonException {
-		h.onString(this.mData);
+		String dat = this.mData;
+		if (dat == null) {
+			h.onNull();
+		} else {
+			h.onString(dat);
+		}
 	}
 
 	@Override
