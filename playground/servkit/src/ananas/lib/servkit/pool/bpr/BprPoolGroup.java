@@ -3,12 +3,13 @@ package ananas.lib.servkit.pool.bpr;
 import java.util.List;
 import java.util.Vector;
 
+import ananas.lib.blueprint.elements.reflect.BprObject;
 import ananas.lib.blueprint.elements.reflect.ReflectElement;
 import ananas.lib.servkit.pool.IPool;
 import ananas.lib.servkit.pool.IPoolGroup;
 import ananas.lib.servkit.pool.IPoolGroupFactory;
 
-public class BprPoolGroup implements IBprPool {
+public class BprPoolGroup extends BprObject implements IBprPool {
 
 	// raw
 	private List<MyPoolItem> mList;

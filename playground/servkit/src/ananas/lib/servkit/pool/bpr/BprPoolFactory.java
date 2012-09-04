@@ -1,8 +1,9 @@
 package ananas.lib.servkit.pool.bpr;
 
+import ananas.lib.blueprint.elements.reflect.BprObject;
 import ananas.lib.servkit.pool.IPool;
 
-public class BprPoolFactory implements IBprPool {
+public class BprPoolFactory extends BprObject implements IBprPool {
 
 	private IBprPool mTargetPool;
 

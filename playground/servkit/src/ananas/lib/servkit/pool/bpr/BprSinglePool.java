@@ -1,12 +1,14 @@
 package ananas.lib.servkit.pool.bpr;
 
+import ananas.lib.blueprint.elements.reflect.BprObject;
 import ananas.lib.blueprint.elements.reflect.ReflectElement;
 import ananas.lib.servkit.pool.IPool;
 import ananas.lib.servkit.pool.IPoolable;
 import ananas.lib.servkit.pool.IPoolableFactory;
 import ananas.lib.servkit.pool.ISinglePoolFactory;
 
-public class BprSinglePool implements IBprPool, IBprPoolableClassProvider {
+public class BprSinglePool extends BprObject implements IBprPool,
+		IBprPoolableClassProvider {
 
 	// the product of this class is ISinglePool
 
