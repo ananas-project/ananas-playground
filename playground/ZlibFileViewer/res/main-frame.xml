@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<bp:blueprint xmlns:bp="xmlns:ananas:blueprint:base"
+	xmlns:awt="xmlns:ananas:blueprint:awt" xmlns:swing="xmlns:ananas:blueprint:swing">
+
+	<bp:import type="class:NamespaceLoader"
+		value="ananas.lib.blueprint.elements.swing.NamespaceLoader" />
+	<bp:import type="class:NamespaceLoader"
+		value="ananas.lib.blueprint.elements.awt.NamespaceLoader" />
+
+	<bp:content>
+		<JFrame xmlns="xmlns:ananas:blueprint:swing" id="root"
+			title="Zlib File Viewer" x="320" y="240" width="640" height="480">
+
+			<JMenuBar id="menu_bar">
+				<JMenu label="File">
+					<JMenuItem command="do-file-open" label="Open ...">
+					</JMenuItem>
+					<JMenuItem id="menu_exit" label="Exit">
+					</JMenuItem>
+				</JMenu>
+
+				<JMenu label="Help">
+					<JMenuItem label="Help Content">
+					</JMenuItem>
+					<JMenuItem label="About">
+					</JMenuItem>
+				</JMenu>
+			</JMenuBar>
+
+			<invoke method="setContentPane">
+				<JDesktopPane id="@+id/desktop" />
+			</invoke>
+
+		</JFrame>
+	</bp:content>
+</bp:blueprint>
