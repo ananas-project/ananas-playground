@@ -22,8 +22,13 @@ public class UdpPortServer implements Runnable {
 		DatagramPacket pack = new DatagramPacket(buffer, buffer.length);
 		for (;;) {
 			sock.receive(pack);
-			System.out.println(pack);
+			DatagramPacketLogger.log("receive", pack);
+
+			String str = "timestamp:" + System.currentTimeMillis();
+			pack.setData(str.getBytes());
+
 			sock.send(pack);
+			DatagramPacketLogger.log("send", pack);
 		}
 	}
 

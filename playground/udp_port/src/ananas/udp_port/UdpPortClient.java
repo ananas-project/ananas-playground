@@ -49,7 +49,7 @@ public class UdpPortClient implements Runnable {
 			DatagramPacket pack = new DatagramPacket(buffer, buffer.length);
 			for (;;) {
 				this.mSock.receive(pack);
-				System.out.println(pack);
+				DatagramPacketLogger.log("receive", pack);
 			}
 		}
 	}
@@ -120,6 +120,8 @@ public class UdpPortClient implements Runnable {
 				URI url = URI.create(strURL);
 				this.mHost = url.getHost();
 				this.mPort = url.getPort();
+				System.out.println("set address as " + this.mHost + ":"
+						+ this.mPort);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
