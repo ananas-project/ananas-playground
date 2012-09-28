@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">nokia3310</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">nokia3310</string>
+    <string name="button_menu">功能表</string>
+    <string name="button_link">捷径</string>
+    <string name="carrier">中国联通</string>
+
+</resources>
