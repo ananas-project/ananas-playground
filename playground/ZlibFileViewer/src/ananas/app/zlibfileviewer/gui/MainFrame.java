@@ -1,53 +1,70 @@
 package ananas.app.zlibfileviewer.gui;
 
-import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.EventObject;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
 import ananas.app.zlibfileviewer.core.ConverToBin;
-import ananas.lib.blueprint.Blueprint;
-import ananas.lib.blueprint.IDocument;
-import ananas.lib.blueprint.elements.awt.util.IEventChainNode;
-import ananas.lib.blueprint.elements.swing.IEJMenuBar;
+import ananas.lib.blueprint2.Blueprint2;
+import ananas.lib.blueprint2.dom.IDocument;
+import ananas.lib.blueprint2.swing_ex.JDirectoryTreeNode;
 
-public class MainFrame implements IEventChainNode {
+public class MainFrame {
 
 	private final JFrame mFrame;
 	private File mCurDir;
+	private File mCurFile;
+	private final JTree mDirTree;
+	private final JTextArea mTextOverview;
+	private final JTextArea mTextContent;
 
 	public MainFrame() {
 		// load
-		final IDocument doc = Blueprint.getInstance().loadDocument(
-				R.file.main_frame_xml);
+		Blueprint2 bp = Blueprint2.getInstance();
+		IDocument doc;
+		try {
+			doc = bp.loadDocument(R.file.main_frame_xml);
+		} catch (IOException e) {
+			e.printStackTrace();
+			doc = null;
+		}
 		this.mFrame = (JFrame) doc.findTargetById(R.id.root);
 		this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.mDirTree = (JTree) doc.findTargetById("dirTree");
+		this.mTextOverview = (JTextArea) doc.findTargetById("textOverview");
+		this.mTextContent = (JTextArea) doc.findTargetById("textContent");
+
 		// bind listener
-		IEJMenuBar bar = (IEJMenuBar) doc.findElementById(R.id.menu_bar);
-		bar.getEventChainNode().setNextNode(this);
+
+		this._bindListener();
+
+	}
+
+	private void _bindListener() {
+		this.mDirTree.getSelectionModel().addTreeSelectionListener(
+				new TreeSelectionListener() {
+
+					@Override
+					public void valueChanged(TreeSelectionEvent arg0) {
+						TreePath path = MainFrame.this.mDirTree
+								.getSelectionPath();
+						JDirectoryTreeNode comp = (JDirectoryTreeNode) path
+								.getLastPathComponent();
+						File file = comp.getFile();
+						MainFrame.this._doFileOpen(file);
+					}
+				});
 	}
 
 	public void show() {
 		this.mFrame.setVisible(true);
-	}
-
-	@Override
-	public void setNextNode(IEventChainNode nextNode) {
-	}
-
-	@Override
-	public void processEvent(EventObject event) {
-		if (event instanceof ActionEvent) {
-			String cmd = ((ActionEvent) event).getActionCommand();
-			if (cmd == null) {
-			} else if (cmd.equals(R.command.do_file_open)) {
-				this._doFileOpen();
-			} else {
-				System.out.println("unknow : " + event);
-			}
-		}
 	}
 
 	private void _doFileOpen() {
@@ -68,6 +85,20 @@ public class MainFrame implements IEventChainNode {
 	}
 
 	private void _doFileOpen(File file) {
-		(new ConverToBin()).binaryToXml(file);
+
+		if (file.isDirectory()) {
+			return;
+		}
+
+		this.mCurFile = file;
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(file.getName() + "\n");
+		sb.append("\n");
+		sb.append("path:" + file.getAbsolutePath() + "\n");
+		sb.append("length:" + file.length() + "\n");
+		this.mTextOverview.setText(sb.toString());
+
+		// (new ConverToBin()).binaryToXml(file);
 	}
 }

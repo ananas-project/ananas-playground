@@ -5,6 +5,9 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="tools"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ananas-base"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/blueprint2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/blueprint2-swing"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/blueprint"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<bp:blueprint xmlns:bp="xmlns:ananas:blueprint:base"
-	xmlns:awt="xmlns:ananas:blueprint:awt" xmlns:swing="xmlns:ananas:blueprint:swing">
+<Blueprint xmlns="xmlns:ananas:blueprint:base" xmlns:bp="xmlns:ananas:blueprint:base"
+	xmlns:awt="xmlns:ananas:blueprint:awt" xmlns:swing="xmlns:ananas:blueprint:swing"
+	xmlns:swingex="xmlns:ananas:blueprint:swing_ex">
 
-	<bp:import type="class:NamespaceLoader"
-		value="ananas.lib.blueprint.elements.swing.NamespaceLoader" />
-	<bp:import type="class:NamespaceLoader"
-		value="ananas.lib.blueprint.elements.awt.NamespaceLoader" />
+	<Head>
+		<Import type="class:NamespaceLoader" value="ananas.lib.blueprint2.swing_ex.NamespaceLoader" />
+		<Import type="class:NamespaceLoader" value="ananas.lib.blueprint2.swing.NamespaceLoader" />
+		<Import type="class:NamespaceLoader" value="ananas.lib.blueprint2.awt.NamespaceLoader" />
+	</Head>
 
-	<bp:content>
+	<Body>
+
 		<JFrame xmlns="xmlns:ananas:blueprint:swing" id="root"
 			title="Zlib File Viewer" x="320" y="240" width="640" height="480">
 
@@ -27,10 +30,85 @@
 				</JMenu>
 			</JMenuBar>
 
-			<invoke method="setContentPane">
-				<JDesktopPane id="@+id/desktop" />
-			</invoke>
+
+			<JSplitPane orientation="horz" dividerLocation="300"
+				dividerSize="10">
+
+				<position value="left" />
+				<JScrollPane>
+					<swingex:JDirectoryTree id="dirTree" />
+				</JScrollPane>
+
+				<position value="right" />
+				<JSplitPane orientation="vert" dividerLocation="200"
+					dividerSize="5">
+
+					<position value="top" />
+					<JScrollPane>
+						<JTextArea id="textOverview" editable="false"
+							background="#e0e0e0">
+
+							h.reg("actionCommand", BaseAttr.class, String.class);
+							h.reg("command", BaseAttr.class, String.class);
+							h.reg("dividerLocation", BaseAttr.class, Double.class);
+							h.reg("dividerSize", BaseAttr.class, Integer.class);
+							h.reg("id",
+							BaseAttr.class, String.class);
+							h.reg("label", BaseAttr.class,
+							String.class);
+							h.reg("orientation", BaseAttr.class, String.class);
+							h.reg("resizeWeight", BaseAttr.class, Double.class);
+							h.reg("title", BaseAttr.class, String.class);
+							h.reg("text",
+							BaseAttr.class, String.class);
+							h.reg("x", BaseAttr.class,
+							Integer.class);
+							h.reg("y", BaseAttr.class, Integer.class);
+							h.reg("width", BaseAttr.class, Integer.class);
+							h.reg("height",
+							BaseAttr.class, Integer.class);
+							h.reg("value", BaseAttr.class,
+							String.class);
+
+
+						</JTextArea>
+					</JScrollPane>
+
+					<position value="bottom" />
+					<JScrollPane>
+						<JTextArea id="textContent" editable="false" background="#e0e0e0">
+
+							h.reg("actionCommand", BaseAttr.class, String.class);
+							h.reg("command", BaseAttr.class, String.class);
+							h.reg("dividerLocation", BaseAttr.class, Double.class);
+							h.reg("dividerSize", BaseAttr.class, Integer.class);
+							h.reg("id",
+							BaseAttr.class, String.class);
+							h.reg("label", BaseAttr.class,
+							String.class);
+							h.reg("orientation", BaseAttr.class, String.class);
+							h.reg("resizeWeight", BaseAttr.class, Double.class);
+							h.reg("title", BaseAttr.class, String.class);
+							h.reg("text",
+							BaseAttr.class, String.class);
+							h.reg("x", BaseAttr.class,
+							Integer.class);
+							h.reg("y", BaseAttr.class, Integer.class);
+							h.reg("width", BaseAttr.class, Integer.class);
+							h.reg("height",
+							BaseAttr.class, Integer.class);
+							h.reg("value", BaseAttr.class,
+							String.class);
+
+
+						</JTextArea>
+					</JScrollPane>
+
+				</JSplitPane>
+
+			</JSplitPane>
 
 		</JFrame>
-	</bp:content>
-</bp:blueprint>
+	</Body>
+</Blueprint>
+
