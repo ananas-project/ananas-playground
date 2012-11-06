@@ -1,0 +1,8 @@
+<resources>
+
+    <style name="AppTheme" parent="android:Theme.Light" />
+    <color name="bg_0">#eeeeee</color>
+    <color name="bg_1">#dddddd</color>
+    <color name="bg_title">#ddeeff</color>
+    
+</resources>
