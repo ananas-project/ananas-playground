@@ -1,8 +1,10 @@
 package ananas.app.droid_location_monitor;
 
-import ananas.app.droid_location_monitor.core.DefaultCoreFactory;
 import ananas.app.droid_location_monitor.core.ICoreFactory;
 import ananas.app.droid_location_monitor.core.IDLMBinder;
+import ananas.app.droid_location_monitor.core.SmartCoreFactory;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -16,7 +18,9 @@ public class DLMonitorService extends Service {
 	public void onCreate() {
 		super.onCreate();
 
-		ICoreFactory cf = new DefaultCoreFactory();
+		// ICoreFactory cf = new DefaultCoreFactory();
+		ICoreFactory cf = new SmartCoreFactory();
+
 		this.mCore = cf.newCore(this);
 		this.mCore.load();
 		if (this.mCore.isRunning()) {
@@ -75,9 +79,14 @@ public class DLMonitorService extends Service {
 			return;
 		}
 
-		// this.startForeground(id, notification);
-
-		this.setForeground(true);
+		String textInfo = "";
+		Notification notification = new Notification(R.drawable.ic_launcher,
+				textInfo, System.currentTimeMillis());
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				new Intent(this, MainActivity.class), 0);
+		notification.setLatestEventInfo(this,
+				this.getString(R.string.app_name), textInfo, contentIntent);
+		this.startForeground(1, notification);
 
 	}
 }

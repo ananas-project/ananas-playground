@@ -182,6 +182,10 @@ public class DefaultCoreFactory implements ICoreFactory {
 
 		private void _saveOutputString(String out) throws IOException {
 			File file = this._getOutputFile();
+			if (!file.exists()) {
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+			}
 			FileOutputStream os = new FileOutputStream(file, true);
 			os.write(out.getBytes());
 			os.flush();
