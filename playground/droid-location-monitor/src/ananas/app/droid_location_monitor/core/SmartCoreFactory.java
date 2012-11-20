@@ -230,7 +230,9 @@ public class SmartCoreFactory implements ICoreFactory {
 						// set head
 						String time = TimeUtil
 								.timestampToString(this.mStartTime);
-						rfile.setHeaderField("Content-Type", "application/gps-record-table");
+						rfile.setHeaderField("Content-Type",
+								"application/gps-record-table");
+						rfile.setHeaderField("Coordinate-System", "WGS84");
 						rfile.setHeaderField("Create-Time", time);
 						rfile.setHeaderField("Create-App", this.getClass()
 								.getName());
@@ -261,7 +263,7 @@ public class SmartCoreFactory implements ICoreFactory {
 			StringBuilder sb = new StringBuilder();
 			for (LocationPeeker peeker : list) {
 				String str = peeker.peek(loc);
-				sb.append("\"" + str + "\",");
+				sb.append(str + ",");
 			}
 			return sb.toString();
 		}
@@ -272,10 +274,10 @@ public class SmartCoreFactory implements ICoreFactory {
 				return list;
 			list = new Vector<LocationPeeker>();
 			// begin
-			list.add(new LocationPeeker("type") {
+			list.add(new LocationPeeker("$FIELDS") {
 				@Override
 				String getString(Location loc) {
-					return "location";
+					return "$LOCATION";
 				}
 			});
 
