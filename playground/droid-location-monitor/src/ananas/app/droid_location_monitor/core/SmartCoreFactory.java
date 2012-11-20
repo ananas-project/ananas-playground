@@ -1,12 +1,14 @@
 package ananas.app.droid_location_monitor.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Vector;
 
 import android.content.Context;
@@ -228,7 +230,7 @@ public class SmartCoreFactory implements ICoreFactory {
 						// set head
 						String time = TimeUtil
 								.timestampToString(this.mStartTime);
-						rfile.setHeaderField("Content-Type", "text/plain");
+						rfile.setHeaderField("Content-Type", "application/gps-record-table");
 						rfile.setHeaderField("Create-Time", time);
 						rfile.setHeaderField("Create-App", this.getClass()
 								.getName());
@@ -361,13 +363,45 @@ public class SmartCoreFactory implements ICoreFactory {
 		}
 
 		public boolean load(File file) {
-			// TODO Auto-generated method stub
-			return true;
+			try {
+
+				if (!file.exists()) {
+					return false;
+				}
+
+				FileInputStream in = new FileInputStream(file);
+				Properties conf = new Properties();
+				conf.load(in);
+				in.close();
+
+				String outputFile = conf.getProperty("output-file");
+				String startTime = conf.getProperty("start-time");
+
+				this.mRecFile = new File(outputFile);
+				this.mStartTime = Long.parseLong(startTime);
+
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
 		}
 
 		public void save(File file) {
-			// TODO Auto-generated method stub
-
+			try {
+				Properties conf = new Properties();
+				conf.setProperty("output-file", this.mRecFile.getAbsolutePath());
+				conf.setProperty("start-time", "" + this.mStartTime);
+				if (!file.exists()) {
+					file.getParentFile().mkdirs();
+					file.createNewFile();
+				}
+				FileOutputStream out = new FileOutputStream(file);
+				conf.store(out, "status of " + this);
+				out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		@Override
@@ -464,6 +498,6 @@ public class SmartCoreFactory implements ICoreFactory {
 		}
 	}
 
-	final static String CRLF = "\n\r";
+	final static String CRLF = "\r\n";
 
 }
