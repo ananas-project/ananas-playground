@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:background="#159951"
+        android:text="info:"
+        tools:context=".MainActivity" />
+
+    <TextView
+        android:id="@+id/output"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world"
+        tools:context=".MainActivity" />
+
+</LinearLayout>
