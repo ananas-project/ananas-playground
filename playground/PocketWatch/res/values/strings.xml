@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PocketWatch</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="text_gmt">GMT</string>
+    <string name="text_ymd">XXXX-XX-XX</string>
+    <string name="text_hms">XX:XX:XX</string>
+    <string name="text_ms">.XXX</string>
+
+</resources>
