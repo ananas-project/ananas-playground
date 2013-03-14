@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.tools.dtt.dom" />
+		<property key="myTargetPackage" value="ananas.tools.dtt.dom" />
+
+
+		<property key="namespace:uri" value="xmlns:ananas:dtt:doc" />
+		<property key="namespace:defaultPrefix" value="dtt" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctrl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Ctrl_$(class:javaName)" />
+
+
+
+		<class name="timer" isElement="true">
+			<element name="task" type="#task" />
+		</class>
+
+		<class name="task" isElement="true">
+			<attribute name="name" />
+			<attribute name="timeQuota" />
+		</class>
+
+
+
+	</namespace>
+
+</eom>
