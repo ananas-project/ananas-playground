@@ -1,0 +1,9 @@
+<timer xmlns="xmlns:ananas:dtt:doc">
+
+	<task name="Task A" timeQuota="3600000" />
+
+	<task name="Task B" timeQuota="3600000" />
+
+	<task name="other" timeQuota="0" />
+
+</timer>
