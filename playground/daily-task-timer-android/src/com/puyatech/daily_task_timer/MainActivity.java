@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Properties;
 
 import ananas.lib.util.logging.AbstractLoggerFactory;
@@ -14,9 +13,12 @@ import ananas.tools.dtt.DailyContext;
 import ananas.tools.dtt.DailyController;
 import ananas.tools.dtt.DailyTask;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -28,8 +30,8 @@ public class MainActivity extends Activity {
 
 	final static Logger logger = (new AbstractLoggerFactory() {
 	}).getLogger();
-	private DailyController mDttCtrl;
-	// private ListView mListView;
+
+	private ListView mListView;
 	private MyListAdapter mListAdapter;
 	private MyTimer mTimer;
 
@@ -39,30 +41,58 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		ListView lv = (ListView) this.findViewById(R.id.listView1);
-		// this.mListView = lv;
+		this.mListView = lv;
 
-		DailyController ctrl = this.initCtrl();
-		this.mDttCtrl = ctrl;
-
-		List<DailyTask> list = ctrl.getModel().getTasks();
-
-		MyListAdapter adp = new MyListAdapter(this, list);
-		this.mListAdapter = adp;
-		lv.setAdapter(adp);
-
-		lv.refreshDrawableState();
-
-		MyTimer timer = new MyTimer(new Runnable() {
+		this.mTimer = new MyTimer(new Runnable() {
 
 			@Override
 			public void run() {
-				MainActivity.this.mListAdapter.notifyDataSetChanged();
+				MainActivity.this.onTimer();
 			}
 		});
 
-		this.mTimer = timer;
-		// timer.start();
+		MyListAdapter adp = this.newAdapter();
+		lv.setAdapter(adp);
+		this.mListAdapter = adp;
 
+	}
+
+	protected void onTimer() {
+		// System.out.println(this + ".onTimer");
+		this.mListAdapter.notifyDataSetChanged();
+	}
+
+	private MyListAdapter newAdapter() {
+
+		Properties prop = new Properties();
+
+		File dir = this.getWorkingDir();
+		String strConf = (new File(dir, "config.xml")).getAbsolutePath();
+		String strCurr = (new File(dir, "rec.txt")).getAbsolutePath();
+		prop.setProperty(Const.key_file_conf, strConf);
+		prop.setProperty(Const.key_file_current, strCurr);
+		DailyContext dcf = DailyContext.Factory.getDefault(prop);
+
+		try {
+			File file = dcf.getConfigFile();
+			if (!file.exists()) {
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+				this.writeDefaultConfig(file);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		DailyController ctrl = dcf.getFactory().newController();
+
+		ctrl.load();
+		return new MyListAdapter(this, ctrl);
+	}
+
+	private File getWorkingDir() {
+		File dir = android.os.Environment.getExternalStorageDirectory();
+		return new File(dir, "ananas/daily-task-timer");
 	}
 
 	@Override
@@ -77,27 +107,15 @@ public class MainActivity extends Activity {
 		super.onResume();
 	}
 
-	private OnClickListener mOnItemClockListener = new OnClickListener() {
-
-		@Override
-		public void onClick(View view) {
-
-			CheckedTextView ctv = (CheckedTextView) view;
-
-			int pos = ctv.getId();
-
-			DailyTask item = MainActivity.this.mListAdapter.getItem(pos);
-			MainActivity.this.mDttCtrl.selectTask(item.getName());
-
-		}
-	};
-
-	class MyListAdapter extends ArrayAdapter<DailyTask> {
+	class MyListAdapter extends ArrayAdapter<DailyTask> implements
+			OnClickListener {
 
 		static final int id_layout = android.R.layout.simple_list_item_checked;
+		private final DailyController mDailyCtrl;
 
-		public MyListAdapter(Context context, List<DailyTask> objects) {
-			super(context, id_layout, objects);
+		public MyListAdapter(Context context, DailyController ctrl) {
+			super(context, id_layout, ctrl.getModel().getTasks());
+			this.mDailyCtrl = ctrl;
 		}
 
 		@Override
@@ -105,6 +123,7 @@ public class MainActivity extends Activity {
 
 			CheckedTextView view = (CheckedTextView) super.getView(pos,
 					convertView, parent);
+
 			// System.out.println(view + "");
 			DailyTask item = this.getItem(pos);
 
@@ -121,11 +140,10 @@ public class MainActivity extends Activity {
 			view.setText(item.getName() + " [" + strTimeSpan + "/"
 					+ strTimeQuota + "] " + timeout);
 
-			DailyTask hotTask = MainActivity.this.mDttCtrl.getModel()
-					.getCurrentTask();
+			DailyTask hotTask = this.mDailyCtrl.getModel().getCurrentTask();
 			view.setChecked(item.equals(hotTask));
 
-			view.setOnClickListener(MainActivity.this.mOnItemClockListener);
+			view.setOnClickListener(this);
 			view.setId(pos);
 
 			return view;
@@ -140,6 +158,18 @@ public class MainActivity extends Activity {
 			int hh = tt / 3600;
 
 			return (hh + ":" + mm + ":" + ss);
+		}
+
+		public DailyController getDailyCtrl() {
+			return this.mDailyCtrl;
+		}
+
+		@Override
+		public void onClick(View view) {
+			int id = view.getId();
+			DailyTask item = this.getItem(id);
+			this.mDailyCtrl.selectTask(item.getName());
+			this.notifyDataSetChanged();
 		}
 
 	}
@@ -187,37 +217,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private DailyController initCtrl() {
-
-		File dir = android.os.Environment.getExternalStorageDirectory();
-		dir = new File(dir, "ananas/daily_task_timer");
-
-		Properties prop = new Properties();
-		prop.setProperty(Const.key_file_conf, dir.getAbsolutePath()
-				+ "/config.xml");
-		prop.setProperty(Const.key_file_current, dir.getAbsolutePath()
-				+ "/record.txt");
-
-		try {
-			DailyContext context = DailyContext.Factory.getDefault(prop);
-
-			File conf = context.getConfigFile();
-			logger.trace("load config from " + conf);
-			if (!conf.exists()) {
-				conf.getParentFile().mkdirs();
-				conf.createNewFile();
-				this.writeDefaultConfig(conf);
-			}
-
-			DailyController ctrl = context.getFactory().newController();
-			ctrl.load();
-			return ctrl;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 	private void writeDefaultConfig(File conf) {
 		try {
 			InputStream in = this.getClass().getResourceAsStream("config.xml");
@@ -239,6 +238,75 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_reset:
+			this.onClickMenuReset();
+			break;
+		case R.id.menu_show_config_path:
+			this.onClickMenuShowPath();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void onClickMenuShowPath() {
+
+		String strOK = "OK";
+
+		String path = this.mListAdapter.getDailyCtrl().getModel().getContext()
+				.getConfigFile().getAbsolutePath();
+
+		AlertDialog dlg = (new AlertDialog.Builder(this))
+				.setTitle(R.string.config_path).setMessage(path)
+				.setNeutralButton(strOK, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+					}
+				}).create();
+		dlg.show();
+	}
+
+	private void onClickMenuReset() {
+
+		String strYES = "yes";
+		String strNO = "no";
+
+		AlertDialog dlg = (new AlertDialog.Builder(this))
+				.setMessage(R.string.sure_to_reset)
+				.setPositiveButton(strNO,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// do nothing
+							}
+						})
+				.setNeutralButton(strYES,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								MainActivity.this.onClickMenuResetYES();
+							}
+						}).create();
+		dlg.show();
+
+	}
+
+	private void onClickMenuResetYES() {
+		DailyController ctrl = this.mListAdapter.getDailyCtrl();
+		ctrl.reset();
+		MyListAdapter adp2 = this.newAdapter();
+		this.mListView.setAdapter(adp2);
+		this.mListAdapter = adp2;
 	}
 
 }

@@ -4,5 +4,9 @@
     <string name="app_name">daily-task-timer</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_reset">Reset</string>
+    <string name="menu_show_config_path">Show Config.xml Path</string>
+    <string name="sure_to_reset">Are you sure to reset the timer ?</string>
+    <string name="config_path">The path of Config.xml</string>
 
 </resources>

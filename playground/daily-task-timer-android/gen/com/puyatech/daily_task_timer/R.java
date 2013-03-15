@@ -15,7 +15,8 @@ public final class R {
     }
     public static final class id {
         public static final int listView1=0x7f070000;
-        public static final int menu_settings=0x7f070004;
+        public static final int menu_reset=0x7f070004;
+        public static final int menu_show_config_path=0x7f070005;
         public static final int radioName=0x7f070001;
         public static final int textTimeQuota=0x7f070003;
         public static final int textTimeSpan=0x7f070002;
@@ -29,8 +30,12 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040000;
+        public static final int config_path=0x7f040006;
         public static final int hello_world=0x7f040001;
+        public static final int menu_reset=0x7f040003;
         public static final int menu_settings=0x7f040002;
+        public static final int menu_show_config_path=0x7f040004;
+        public static final int sure_to_reset=0x7f040005;
     }
     public static final class style {
         /** 
