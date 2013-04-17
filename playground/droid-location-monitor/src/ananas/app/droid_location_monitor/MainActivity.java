@@ -1,8 +1,10 @@
 package ananas.app.droid_location_monitor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -101,6 +103,23 @@ public class MainActivity extends Activity implements ActivityAgent {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case R.id.menu_dtime_adjust: {
+			Class<?> cls = DateTimeAdjustActivity.class;
+			this.startActivity(new Intent(this, cls));
+			break;
+		}
+		case R.id.menu_settings:
+			break;
+		default:
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
