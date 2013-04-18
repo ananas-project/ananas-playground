@@ -121,9 +121,11 @@ public class DateTimeAdjustActivity extends Activity {
 				// gps-phone-time
 				long gps_phone_time = ll.getTime() - ll.mTime;
 				sb.append("gps-phone-time : " + gps_phone_time + "ms" + CRLF);
-			}
-			{
-				// ?now=1234& ;
+
+				// ?now=1234567890123&time-phone=1234567890123&time-gps=1234567890123
+				String query = "?now=" + (now - (now % 1000)) + "&time-phone="
+						+ ll.mTime + "&time-gps=" + ll.getTime();
+				sb.append("query-string : " + query);
 			}
 			// sb.append("ll : " + ll + CRLF);
 		}
