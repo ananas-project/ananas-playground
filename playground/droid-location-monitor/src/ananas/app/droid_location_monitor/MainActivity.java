@@ -114,6 +114,13 @@ public class MainActivity extends Activity implements ActivityAgent {
 			this.startActivity(new Intent(this, cls));
 			break;
 		}
+
+		case R.id.menu_trip_log: {
+			Class<?> cls = TripLogActivity.class;
+			this.startActivity(new Intent(this, cls));
+			break;
+		}
+
 		case R.id.menu_settings:
 			break;
 		default:

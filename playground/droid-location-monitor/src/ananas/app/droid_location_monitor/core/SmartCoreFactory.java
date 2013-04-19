@@ -37,7 +37,7 @@ public class SmartCoreFactory implements ICoreFactory {
 
 		@Override
 		public void load() {
-			File file = this.getFile(this.fn_status);
+			File file = this.getSettingsFile(this.fn_status);
 			RecTask task = new RecTask(this);
 			if (task.load(file)) {
 				this._setCurTask(task);
@@ -58,15 +58,19 @@ public class SmartCoreFactory implements ICoreFactory {
 			}
 		}
 
-		private File getFile(String filename) {
-			File dir = android.os.Environment.getExternalStorageDirectory();
-			dir = new File(dir, "ananas/droid-location-monitor");
+		private File getSettingsFile(String filename) {
+			File dir = WorkingDirectory.getApplicationDirectory();
+			return new File(dir, filename);
+		}
+
+		public File getRecFile(String filename) {
+			File dir = WorkingDirectory.getRecordDirectory();
 			return new File(dir, filename);
 		}
 
 		@Override
 		public void save() {
-			File file = this.getFile(this.fn_status);
+			File file = this.getSettingsFile(this.fn_status);
 			RecTask task = this.mCurTask;
 			if (task == null) {
 				if (file.exists())
@@ -115,17 +119,23 @@ public class SmartCoreFactory implements ICoreFactory {
 						+ TimeUtil.timespanToString(now - startTime) + "\n");
 				sb.append("\n");
 
-				final Location loc = task.getLastLocation();
+				final LocationEx loc = task.getLastLocation();
 				if (loc != null) {
-					sb.append("latitude: " + loc.getLatitude() + "\n");
-					sb.append("longitude: " + loc.getLongitude() + "\n");
-					sb.append("altitude: " + loc.getAltitude() + "\n");
-					sb.append("accuracy: " + loc.getAccuracy() + "\n");
+					sb.append("latitude: " + loc.toNative().getLatitude()
+							+ "\n");
+					sb.append("longitude: " + loc.toNative().getLongitude()
+							+ "\n");
+					sb.append("altitude: " + loc.toNative().getAltitude()
+							+ "\n");
+					sb.append("accuracy: " + loc.toNative().getAccuracy()
+							+ "\n");
 					sb.append("time: "
-							+ TimeUtil.timestampToString(loc.getTime()) + "\n");
-					sb.append("bearing: " + loc.getBearing() + "\n");
-					sb.append("speed: " + loc.getSpeed() + "\n");
-					sb.append("provider: " + loc.getProvider() + "\n");
+							+ TimeUtil.timestampToString(loc.toNative()
+									.getTime()) + "\n");
+					sb.append("bearing: " + loc.toNative().getBearing() + "\n");
+					sb.append("speed: " + loc.toNative().getSpeed() + "\n");
+					sb.append("provider: " + loc.toNative().getProvider()
+							+ "\n");
 				}
 				return sb.toString();
 			}
@@ -137,23 +147,20 @@ public class SmartCoreFactory implements ICoreFactory {
 			return this.mContext;
 		}
 
-		@Override
-		public File getAppDir() {
-			return this.getFile(".");
-		}
 	}
 
-	interface TaskContext {
+	private interface TaskContext {
 
 		Context getContext();
 
-		File getAppDir();
+		File getRecFile(String filename);
+
 	}
 
 	class RecTask implements LocationListener {
 
-		private Location mLastLocation;
-		private final Vector<Location> mLocationBuffer = new Vector<Location>();
+		private LocationEx mLastLocation;
+		private final Vector<LocationEx> mLocationBuffer = new Vector<LocationEx>();
 		private int mCountRec;
 		private long mStartTime;
 		private final TaskContext mTC;
@@ -167,7 +174,7 @@ public class SmartCoreFactory implements ICoreFactory {
 			this.mStartTime = System.currentTimeMillis();
 		}
 
-		public Location getLastLocation() {
+		public LocationEx getLastLocation() {
 			return this.mLastLocation;
 		}
 
@@ -221,7 +228,7 @@ public class SmartCoreFactory implements ICoreFactory {
 		private void _flushRecData() {
 			try {
 				final File file = this.getOutputFile();
-				final List<Location> buf = this.mLocationBuffer;
+				final List<LocationEx> buf = this.mLocationBuffer;
 				final boolean noFile = !file.exists();
 				final boolean hasData = !buf.isEmpty();
 				if (noFile || hasData) {
@@ -233,7 +240,8 @@ public class SmartCoreFactory implements ICoreFactory {
 						rfile.setHeaderField("Content-Type",
 								"application/gps-record-table");
 						rfile.setHeaderField("Coordinate-System", "WGS84");
-						rfile.setHeaderField("Create-Time", time);
+						rfile.setHeaderField("Create-Time", mStartTime + "");
+						rfile.setHeaderField("the-create-time", time);
 						rfile.setHeaderField("Create-App", this.getClass()
 								.getName());
 
@@ -241,7 +249,7 @@ public class SmartCoreFactory implements ICoreFactory {
 						rfile.append(str + CRLF);
 					}
 					if (hasData) {
-						for (Location loc : buf) {
+						for (LocationEx loc : buf) {
 							String str = this._locationToString(loc);
 							rfile.append(str + CRLF);
 						}
@@ -258,7 +266,7 @@ public class SmartCoreFactory implements ICoreFactory {
 		 * @param loc
 		 *            if loc==null, return field list
 		 * */
-		private String _locationToString(Location loc) {
+		private String _locationToString(LocationEx loc) {
 			List<LocationPeeker> list = this._getPeekList();
 			StringBuilder sb = new StringBuilder();
 			for (LocationPeeker peeker : list) {
@@ -276,61 +284,67 @@ public class SmartCoreFactory implements ICoreFactory {
 			// begin
 			list.add(new LocationPeeker("$FIELDS") {
 				@Override
-				String getString(Location loc) {
+				String getString(LocationEx loc) {
 					return "$LOCATION";
 				}
 			});
 
 			list.add(new LocationPeeker("source") {
 				@Override
-				String getString(Location loc) {
-					return "" + loc.getProvider();
+				String getString(LocationEx loc) {
+					return "" + loc.toNative().getProvider();
 				}
 			});
 
 			list.add(new LocationPeeker("timestamp") {
 				@Override
-				String getString(Location loc) {
-					return "" + loc.getTime();
+				String getString(LocationEx loc) {
+					return "" + loc.toNative().getTime();
+				}
+			});
+			list.add(new LocationPeeker("rtc-time") {
+				@Override
+				String getString(LocationEx loc) {
+					return "" + loc.getPhoneTime();
 				}
 			});
 
 			list.add(new LocationPeeker("longitude") {
 				@Override
-				String getString(Location loc) {
-					return "" + loc.getLongitude();
+				String getString(LocationEx loc) {
+					return "" + loc.toNative().getLongitude();
 				}
 			});
 			list.add(new LocationPeeker("latitude") {
 				@Override
-				String getString(Location loc) {
-					return "" + loc.getLatitude();
+				String getString(LocationEx loc) {
+					return "" + loc.toNative().getLatitude();
 				}
 			});
 
 			list.add(new LocationPeeker("altitude") {
 				@Override
-				String getString(Location loc) {
-					return "" + loc.getAltitude();
+				String getString(LocationEx loc) {
+					return "" + loc.toNative().getAltitude();
 				}
 			});
 			list.add(new LocationPeeker("accuracy") {
 				@Override
-				String getString(Location loc) {
-					return "" + loc.getAccuracy();
+				String getString(LocationEx loc) {
+					return "" + loc.toNative().getAccuracy();
 				}
 			});
 
 			list.add(new LocationPeeker("speed") {
 				@Override
-				String getString(Location loc) {
-					return "" + loc.getSpeed();
+				String getString(LocationEx loc) {
+					return "" + loc.toNative().getSpeed();
 				}
 			});
 			list.add(new LocationPeeker("bearing") {
 				@Override
-				String getString(Location loc) {
-					return "" + loc.getBearing();
+				String getString(LocationEx loc) {
+					return "" + loc.toNative().getBearing();
 				}
 			});
 
@@ -343,8 +357,7 @@ public class SmartCoreFactory implements ICoreFactory {
 			File file = this.mRecFile;
 			if (file == null) {
 				String strtime = TimeUtil.timestampToString(this.mStartTime);
-				File dir = this.mTC.getAppDir();
-				file = new File(dir, "record/dlm_rec_" + strtime + ".txt");
+				file = this.mTC.getRecFile("trace_" + strtime + ".txt");
 				this.mRecFile = file;
 			}
 			return file;
@@ -408,10 +421,12 @@ public class SmartCoreFactory implements ICoreFactory {
 
 		@Override
 		public void onLocationChanged(Location arg0) {
+			long now = System.currentTimeMillis();
 			Location loc = new Location(arg0);
-			this.mLastLocation = loc;
-			Vector<Location> buf = this.mLocationBuffer;
-			buf.add(loc);
+			MyLocationEx loc_ex = new MyLocationEx(now, loc);
+			this.mLastLocation = loc_ex;
+			Vector<LocationEx> buf = this.mLocationBuffer;
+			buf.add(loc_ex);
 			this.mCountRec++;
 		}
 
@@ -434,6 +449,27 @@ public class SmartCoreFactory implements ICoreFactory {
 		}
 	}
 
+	private static class MyLocationEx implements LocationEx {
+
+		private final long mPhoneTime;
+		private final Location mLoc;
+
+		public MyLocationEx(long now, Location loc) {
+			this.mPhoneTime = now;
+			this.mLoc = loc;
+		}
+
+		@Override
+		public Location toNative() {
+			return this.mLoc;
+		}
+
+		@Override
+		public long getPhoneTime() {
+			return this.mPhoneTime;
+		}
+	}
+
 	abstract class LocationPeeker {
 
 		private final String mField;
@@ -442,7 +478,7 @@ public class SmartCoreFactory implements ICoreFactory {
 			this.mField = field;
 		}
 
-		public String peek(Location loc) {
+		public String peek(LocationEx loc) {
 			if (loc == null) {
 				return this.mField;
 			} else {
@@ -450,7 +486,7 @@ public class SmartCoreFactory implements ICoreFactory {
 			}
 		}
 
-		abstract String getString(Location loc);
+		abstract String getString(LocationEx loc);
 	}
 
 	class RecFile {

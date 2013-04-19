@@ -1,7 +1,6 @@
 package ananas.app.droid_location_monitor.core;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public class TimeUtil {
 
@@ -20,8 +19,8 @@ public class TimeUtil {
 	}
 
 	public static String timestampToString(long ms) {
-
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		// zone= TimeZone.getTimeZone("GMT")
+		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(ms);
 
 		int year = cal.get(Calendar.YEAR);

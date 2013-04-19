@@ -8,5 +8,6 @@
     <string name="text_start">start</string>
     <string name="text_stop">stop</string>
     <string name="text_refresh">refresh</string>
+    <string name="menu_trip_log">Trip Log</string>
 
 </resources>
