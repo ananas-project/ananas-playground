@@ -58,11 +58,12 @@ public class DlmReader implements LocationInput {
 			for (;;) {
 				line = this.nextLine();
 
-				if (line == null)
+				if (line == null) {
 					return null;
-
-				if (line.startsWith("$LOCATION"))
+				} else if (line.startsWith("$LOCATION")) {
 					break;
+				} else if (line.startsWith("$FIELDS")) {
+				}
 			}
 
 			return this.str2Location(line);
@@ -77,9 +78,9 @@ public class DlmReader implements LocationInput {
 
 			Location loc = new Location();
 
-			loc.longitude = Double.parseDouble(array[3]);
-			loc.latitude = Double.parseDouble(array[4]);
-			loc.altitude = Double.parseDouble(array[5]);
+			loc.longitude = Double.parseDouble(array[3 + 1]);
+			loc.latitude = Double.parseDouble(array[4 + 1]);
+			loc.altitude = Double.parseDouble(array[5 + 1]);
 
 			return loc;
 		}
