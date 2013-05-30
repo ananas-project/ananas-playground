@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:icon="@drawable/ic_launcher"
+    android:settingsActivity="ananas.app.boluoime.MainActivity" >
+
+    <subtype
+        android:name="@string/display_name_english_keyboard_ime"
+        android:icon="@drawable/subtype_icon_english_keyboard_ime"
+        android:imeSubtypeExtraValue="somePrivateOption=true"
+        android:imeSubtypeLocale="en_US"
+        android:imeSubtypeMode="keyboard" />
+    <subtype
+        android:name="@string/display_name_french_keyboard_ime"
+        android:icon="@drawable/subtype_icon_french_keyboard_ime"
+        android:imeSubtypeExtraValue="foobar=30,someInternalOption=false"
+        android:imeSubtypeLocale="fr_FR"
+        android:imeSubtypeMode="keyboard" />
+
+</input-method>
