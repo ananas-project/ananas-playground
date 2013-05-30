@@ -7,8 +7,9 @@ public class Main_for_Dlm2Kml {
 	public static void main(String arg[]) {
 
 		try {
+			String srcPath = arg[0];
 			File src, dest;
-			src = new File(arg[0]);
+			src = new File(srcPath);
 			dest = new File(src.getAbsolutePath() + ".kml");
 			System.out.println("convert");
 			System.out.println("    source dlm : " + src);
@@ -35,6 +36,7 @@ public class Main_for_Dlm2Kml {
 			e.printStackTrace();
 			System.err.println();
 			System.out.println("error");
+			System.out.println("use command line 'this.jar [src_path]' to do.");
 		}
 	}
 }
