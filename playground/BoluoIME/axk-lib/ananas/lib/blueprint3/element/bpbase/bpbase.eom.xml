@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.blueprint3.element.bpbase" />
+		<property key="myTargetPackage" value="ananas.lib.blueprint3.element.bpbase" />
+
+
+		<property key="namespace:uri" value="xmlns:ananas:blueprint:base" />
+		<property key="namespace:defaultPrefix" value="bp" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctrl$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Tar$(class:javaName)" />
+
+
+		<!-- base -->
+
+		<class name="Object">
+			<!-- <attribute name="stamp" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+
+		<!-- components -->
+
+
+
+		<class name="Blueprint" isElement="true" extends="#Object">
+			<!-- <attribute name="stamp" /> -->
+			<element name="Head" type="#Head" />
+			<element name="Body" type="#Body" />
+		</class>
+
+		<class name="Head" isElement="true" extends="#Object">
+			<!-- <attribute name="stamp" /> -->
+			<element name="Import" type="#Import" />
+		</class>
+
+		<class name="Body" isElement="true" extends="#Object">
+			<!-- <attribute name="stamp" /> -->
+			<element type="java.lang.Object" />
+		</class>
+
+		<class name="Import" isElement="true" extends="#Object">
+			<attribute name="type" />
+			<attribute name="value" />
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+
+	</namespace>
+
+</eom>

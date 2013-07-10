@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.axk.element.iq_roster" />
+		<property key="myTargetPackage" value="ananas.lib.axk.element.iq_roster" />
+
+
+		<property key="namespace:uri" value="jabber:iq:roster" />
+		<property key="namespace:defaultPrefix" value="roster" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctrl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Xmpp_$(class:javaName)" />
+
+
+		<!-- components -->
+
+		<class name="item" isElement="true">
+			<attribute name="jid" />
+			<attribute name="subscription" />
+			<attribute name="name" />
+			<element name="group" type="#group" />
+		</class>
+
+		<class name="query" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<element name="item" type="#item" />
+		</class>
+
+		<class name="group" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="item" type="#item" /> -->
+			<text />
+		</class>
+
+	</namespace>
+
+</eom>

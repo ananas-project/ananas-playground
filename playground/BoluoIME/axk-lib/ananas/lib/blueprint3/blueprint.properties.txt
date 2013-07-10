@@ -1,0 +1,5 @@
+
+# in the implementation's "ananas.lib.blueprint3" package, 
+# put "bp3.properties" to define the BlueprintFactory like this:
+
+ananas.lib.blueprint3.BlueprintFactory = ananas.lib.blueprint3.BlueprintFactoryImpl
