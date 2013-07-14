@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace uri="xmlns:ananas:axk:xmpp-client" enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.impl.axk.client.ctrl" />
+		<property key="myTargetPackage" value="ananas.lib.impl.axk.client.target" />
+
+
+
+		<property key="namespace:defaultPrefix" value="xmppclient" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Tar_$(class:javaName)" />
+
+
+		<!-- base -->
+
+		<class name="abstractClient" isElement="false">
+			<attribute name="id" />
+			<element type="#abstractClient" />
+		</class>
+
+
+		<!-- elements -->
+
+		<class name="monitor" isElement="true" extends="#abstractClient">
+		</class>
+
+		<class name="shell" isElement="true" extends="#abstractClient">
+		</class>
+
+		<class name="connection-v1" isElement="true" extends="#abstractClient" />
+		<class name="connection-v2" isElement="true" extends="#abstractClient" />
+		<class name="stanza-convertor" isElement="true" extends="#abstractClient" />
+
+
+		<class name="core" isElement="true" extends="#abstractClient">
+		</class>
+
+
+		<class name="message-manager" isElement="true" extends="#abstractClient">
+		</class>
+		<class name="roster-manager" isElement="true" extends="#abstractClient">
+		</class>
+		<class name="presence-manager" isElement="true" extends="#abstractClient">
+		</class>
+
+
+	</namespace>
+
+</eom>

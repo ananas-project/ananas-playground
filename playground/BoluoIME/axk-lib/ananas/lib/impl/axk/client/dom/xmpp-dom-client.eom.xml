@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace uri="xmlns:ananas:axk:xmpp-dom-client"
+		enableExport="true">
+
+		<property key="myCtrlPackage" value="ananas.lib.impl.axk.client.dom" />
+		<property key="myTargetPackage" value="ananas.lib.impl.axk.client.dom" />
+
+		<property key="namespace:defaultPrefix" value="xmpp-dom-client" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Tar_$(class:javaName)" />
+
+		<!-- base -->
+
+		<class name="abstractClient" isElement="false">
+			<attribute name="id" />
+			<element type="#abstractClient" />
+		</class>
+
+		<!-- elements -->
+
+		<class name="connection" isElement="true" extends="#abstractClient">
+		</class>
+
+	</namespace>
+
+</eom>

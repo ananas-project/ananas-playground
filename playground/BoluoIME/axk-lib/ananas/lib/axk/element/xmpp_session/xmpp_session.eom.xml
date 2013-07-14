@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.axk.element.xmpp_session" />
+		<property key="myTargetPackage" value="ananas.lib.axk.element.xmpp_session" />
+
+
+		<property key="namespace:uri" value="urn:ietf:params:xml:ns:xmpp-session" />
+		<property key="namespace:defaultPrefix" value="xmpp-session" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctrl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Xmpp_$(class:javaName)" />
+
+
+		<!-- components -->
+
+		<class name="session" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+
+	</namespace>
+
+</eom>

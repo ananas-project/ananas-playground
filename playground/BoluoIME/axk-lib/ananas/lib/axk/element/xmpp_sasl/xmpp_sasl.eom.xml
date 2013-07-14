@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.axk.element.xmpp_sasl" />
+		<property key="myTargetPackage" value="ananas.lib.axk.element.xmpp_sasl" />
+
+
+		<property key="namespace:uri" value="urn:ietf:params:xml:ns:xmpp-sasl" />
+		<property key="namespace:defaultPrefix" value="xmpp-sasl" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctrl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Xmpp_$(class:javaName)" />
+
+		<property key="class_Ctrl_error" value="$(myCtrlPackage).Ctrl_sasl_error" />
+		<property key="class_Xmpp_error" value="$(myTargetPackage).Xmpp_sasl_error" />
+
+
+
+		<!-- components -->
+
+		<class name="mechanisms" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+		<class name="mechanism" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+			<text />
+		</class>
+
+		<class name="failure" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<element type="#sasl-error" />
+		</class>
+
+
+		<class name="success" isElement="true">
+		</class>
+
+
+		<!-- error(s) -->
+
+		<class name="sasl-error" />
+
+		<class name="aborted" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+		<class name="account-disabled" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+		<class name="credentials-expired" isElement="true"
+			targetClass="$(class_Xmpp_error)" controllerClass="$(class_Ctrl_error)" />
+
+		<class name="encryption-required" isElement="true"
+			targetClass="$(class_Xmpp_error)" controllerClass="$(class_Ctrl_error)" />
+
+		<class name="incorrect-encoding" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+		<class name="invalid-authzid" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+		<class name="invalid-mechanism" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+		<class name="malformed-request" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+		<class name="mechanism-too-weak" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+		<class name="not-authorized" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+		<class name="temporary-auth-failure" isElement="true"
+			targetClass="$(class_Xmpp_error)" controllerClass="$(class_Ctrl_error)" />
+
+		<class name="transition-needed" isElement="true" targetClass="$(class_Xmpp_error)"
+			controllerClass="$(class_Ctrl_error)" />
+
+
+	</namespace>
+
+</eom>

@@ -1,0 +1,15 @@
+<shell xmlns="xmlns:ananas:axk:xmpp-client" xmlns:dom="xmlns:ananas:axk:xmpp-client">
+	<monitor>
+		<message-manager>
+			<roster-manager>
+				<presence-manager>
+					<connection-v2>
+						<stanza-convertor>
+							<core id="core" />
+						</stanza-convertor>
+					</connection-v2>
+				</presence-manager>
+			</roster-manager>
+		</message-manager>
+	</monitor>
+</shell>

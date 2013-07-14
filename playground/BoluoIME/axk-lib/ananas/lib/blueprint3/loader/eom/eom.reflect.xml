@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reflect xmlns="xmlns:ananas:blueprint:loader:reflect">
+
+	<namespace name="xmlns:ananas:blueprint:loader:eom">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.blueprint3.loader.eom.ctrl" />
+		<property key="myTargetPackage" value="ananas.lib.blueprint3.loader.eom.target" />
+
+
+		<property key="ns:defaultPrefix" value="eom" />
+		<property key="ns:localName" value="" />
+		<property key="ns:setAttributeMethodNamePrefix" value="set_attribute_" />
+		<property key="ns:appendChildMethodNamePrefix" value="append_child_" />
+		<property key="ns:defaultControllerClass" value="$(myCtrlPackage).Ctrl_$(ns:localName)" />
+		<property key="ns:defaultTargetClass" value="$(myTargetPackage).Tar_$(ns:localName)" />
+
+
+
+
+
+		<element name="eom" />
+		<element name="namespace" />
+		<element name="property" />
+
+		<element name="class" />
+		<element name="attribute" />
+		<element name="element" />
+		<element name="text" />
+
+
+	</namespace>
+
+</reflect>

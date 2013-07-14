@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.axk.element.vcard.temp.x.update" />
+		<property key="myTargetPackage" value="ananas.lib.axk.element.vcard.temp.x.update" />
+
+
+		<property key="namespace:uri" value="vcard-temp:x:update" />
+		<property key="namespace:defaultPrefix" value="vcard-temp-x-update" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctrl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Xmpp_$(class:javaName)" />
+
+
+		<!-- components -->
+
+		<class name="x" isElement="true">
+			<!-- <attribute name="stamp" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+		<class name="photo" isElement="true">
+			<!-- <attribute name="stamp" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+	</namespace>
+
+</eom>

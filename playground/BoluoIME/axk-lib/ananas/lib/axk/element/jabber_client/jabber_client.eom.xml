@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.axk.element.jabber_client" />
+		<property key="myTargetPackage" value="ananas.lib.axk.element.jabber_client" />
+
+
+		<property key="namespace:uri" value="jabber:client" />
+		<property key="namespace:defaultPrefix" value="jc" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctrl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Xmpp_$(class:javaName)" />
+
+
+		<class name="Stanza" isElement="false">
+			<attribute name="id" />
+			<attribute name="from" />
+			<attribute name="to" />
+			<attribute name="xml:lang" />
+			<attribute name="lang" />
+			<attribute name="type" />
+			<element type="java.lang.Object" />
+		</class>
+
+		<!-- util -->
+
+		<class name="status" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+		<class name="show" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+		<class name="priority" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+		<class name="body" isElement="true">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+			<text />
+		</class>
+
+
+		<!-- stanza -->
+
+		<class name="iq" isElement="true" extends="#Stanza">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+		<class name="presence" isElement="true" extends="#Stanza">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+		<class name="message" isElement="true" extends="#Stanza">
+			<!-- <attribute name="id" /> -->
+			<!-- <element name="test" type="java.lang.Object" /> -->
+		</class>
+
+
+	</namespace>
+
+</eom>

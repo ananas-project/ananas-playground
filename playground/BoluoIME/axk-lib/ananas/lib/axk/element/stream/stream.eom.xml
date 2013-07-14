@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eom xmlns="xmlns:ananas:blueprint:loader:eom">
+
+	<namespace enableExport="true">
+
+
+		<property key="myCtrlPackage" value="ananas.lib.axk.element.stream" />
+		<property key="myTargetPackage" value="ananas.lib.axk.element.stream" />
+		<property key="myBpCorePackage" value="ananas.lib.blueprint3.dom" />
+
+
+		<property key="namespace:uri" value="http://etherx.jabber.org/streams" />
+		<property key="namespace:defaultPrefix" value="stream" />
+		<property key="class:javaName" value="xxx" />
+
+		<property key="class:controllerClass" value="$(myCtrlPackage).Ctrl_$(class:javaName)" />
+		<property key="class:targetClass" value="$(myTargetPackage).Xmpp_$(class:javaName)" />
+
+
+		<class name="BPElement" controllerClass="$(myBpCorePackage).$(class:javaName)"
+			targetClass="java.lang.Object">
+		</class>
+
+		<!-- components -->
+
+		<class name="stream" isElement="true">
+
+			<attribute name="from" />
+			<attribute name="to" />
+			<attribute name="id" />
+			<attribute name="version" />
+			<attribute name="lang" />
+
+			<element type="#BPElement" />
+
+		</class>
+
+
+		<class name="features" isElement="true">
+
+
+			<!-- <element name="test" type="java.lang.Object" /> -->
+			<element type="#BPElement" />
+
+		</class>
+
+		<class name="error" isElement="true">
+
+
+			<!-- <element name="test" type="java.lang.Object" /> -->
+
+		</class>
+
+
+	</namespace>
+
+</eom>
