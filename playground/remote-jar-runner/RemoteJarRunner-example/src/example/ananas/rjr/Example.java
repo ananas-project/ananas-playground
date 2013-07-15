@@ -1,8 +1,11 @@
 package example.ananas.rjr;
 
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 public class Example {
 
@@ -16,9 +19,17 @@ public class Example {
 			Properties prop = new Properties();
 			prop.load(in);
 			in.close();
-			Enumeration<Object> keys = prop.keys();
-			for (; keys.hasMoreElements();) {
-				String key = keys.nextElement().toString();
+			Properties sp = System.getProperties();
+			sp.putAll(prop);
+			prop = sp;
+
+			List<String> keylist = new ArrayList<String>();
+			Set<Object> keyset = prop.keySet();
+			for (Object k : keyset) {
+				keylist.add(k.toString());
+			}
+			Collections.sort(keylist);
+			for (String key : keylist) {
 				String value = prop.getProperty(key);
 				System.out.println(key + "=" + value);
 			}

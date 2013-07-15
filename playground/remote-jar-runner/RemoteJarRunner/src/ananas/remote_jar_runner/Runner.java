@@ -186,7 +186,11 @@ public class Runner {
 			try {
 				URL classURL = jarfile.toURI().toURL();
 				URLClassLoader ldr = new URLClassLoader(new URL[] { classURL });
-				String name = conf.getTaskClassName();
+				InputStream in = ldr.getResourceAsStream("task.properties");
+				Properties prop = new Properties();
+				prop.load(in);
+				in.close();
+				String name = prop.getProperty(TaskConfig.key_task_class); // conf.getTaskClassName();
 				Class<?> cls = ldr.loadClass(name);
 				TaskRunnable task = (TaskRunnable) cls.newInstance();
 				task = new MyTaskRunnableProxy(task, ldr);

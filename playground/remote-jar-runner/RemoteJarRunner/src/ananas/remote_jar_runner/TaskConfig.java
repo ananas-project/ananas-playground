@@ -14,16 +14,25 @@ public class TaskConfig {
 		this._prop = prop;
 	}
 
-	public String getTaskClassName() {
-		return _prop.getProperty(key_task_class);
-	}
-
+	/*
+	 * public String getTaskClassName() { return
+	 * this._getProperty(key_task_class); }
+	 */
 	public String getJarURL() {
-		return _prop.getProperty(key_jar_url);
+		return this._getProperty(key_jar_url);
 	}
 
 	public String getJarSha1() {
-		return _prop.getProperty(key_jar_sha1);
+		return this._getProperty(key_jar_sha1);
+	}
+
+	private String _getProperty(String key) {
+		String value = this._prop.getProperty(key);
+		if (value == null) {
+			System.err.println("warning:no value for key:" + key);
+			value = key;
+		}
+		return value;
 	}
 
 }
