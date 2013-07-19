@@ -9,14 +9,29 @@ import java.security.MessageDigest;
 public class TaskUtil {
 
 	public static byte[] downloadFile(String url) {
+		return downloadFile(url, 5);
+	}
+
+	public static byte[] downloadFile(String url, int retry) {
 		try {
+			if (retry <= 0) {
+				throw new RuntimeException("retry too more.");
+			}
 			URL aURL = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection) aURL.openConnection();
 			int code = conn.getResponseCode();
 			if (code != 200) {
-				System.out.println(url + " response HTTP " + code);
 				conn.disconnect();
-				return null;
+				switch (code) {
+				case HttpURLConnection.HTTP_MOVED_PERM:
+				case HttpURLConnection.HTTP_MOVED_TEMP:
+					// redir
+					String loc = conn.getHeaderField("Location");
+					return downloadFile(loc, retry - 1);
+				default:
+					System.out.println(url + " response HTTP " + code);
+					return null;
+				}
 			}
 			int limit = 1024 * 1024 * 10;
 			if (conn.getContentLength() > limit) {
