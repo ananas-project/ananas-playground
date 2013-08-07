@@ -1,5 +1,6 @@
 package ananas.app.zlibfileviewer.gui;
 
+import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -13,13 +14,16 @@ import java.util.zip.InflaterInputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+import ananas.app.zlibfileviewer.core.GitObjectExport;
 import ananas.lib.blueprint2.Blueprint2;
+import ananas.lib.blueprint2.awt.util.IResponseChainNode;
 import ananas.lib.blueprint2.dom.IDocument;
 import ananas.lib.blueprint2.swing_ex.JDirectoryTreeNode;
 
@@ -31,6 +35,8 @@ public class MainFrame {
 	private final JTree mDirTree;
 	private final JTextArea mTextOverview;
 	private final JTextArea mTextContent;
+	private IResponseChainNode mMenuListener;
+	private JFileChooser _exportFileChooser;
 
 	public MainFrame() {
 		// load
@@ -47,6 +53,8 @@ public class MainFrame {
 		this.mDirTree = (JTree) doc.findTargetById("dirTree");
 		this.mTextOverview = (JTextArea) doc.findTargetById("textOverview");
 		this.mTextContent = (JTextArea) doc.findTargetById("textContent");
+		this.mMenuListener = (IResponseChainNode) doc
+				.findTargetById(R.id.menu_listener_node_1);
 
 		// bind listener
 
@@ -68,6 +76,80 @@ public class MainFrame {
 						MainFrame.this._doFileOpen(file);
 					}
 				});
+
+		this.mMenuListener.setHook(new IResponseChainNode() {
+
+			@Override
+			public IResponseChainNode getNext() {
+				return null;
+			}
+
+			@Override
+			public void setNext(IResponseChainNode next) {
+			}
+
+			@Override
+			public IResponseChainNode getHook() {
+				return null;
+			}
+
+			@Override
+			public void setHook(IResponseChainNode hook) {
+			}
+
+			@Override
+			public boolean processEvent(ActionEvent e) {
+				String cmd = e.getActionCommand();
+				if (cmd == null) {
+					return false;
+				} else if (cmd.equals(R.command.file_export_with_head)) {
+					MainFrame.this._doFileExport(true);
+				} else if (cmd.equals(R.command.file_export_without_head)) {
+					MainFrame.this._doFileExport(false);
+				} else {
+					return false;
+				}
+				return true;
+			}
+		});
+	}
+
+	protected void _doFileExport(boolean withHead) {
+
+		JFileChooser fc = this._exportFileChooser;
+		if (fc == null) {
+			fc = new JFileChooser();
+			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			this._exportFileChooser = fc;
+		}
+		final int returnVal = fc.showOpenDialog(this.mFrame);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			System.out.println("You chose to open this file: "
+					+ file.getAbsolutePath());
+
+		}
+
+		GitObjectExport exp = new GitObjectExport(this.mCurFile,
+				fc.getSelectedFile());
+		boolean res = exp.doExport();
+
+		StringBuilder sb = new StringBuilder();
+		{
+			sb.append("\n              src file = " + exp.getObjectFile());
+			sb.append("\n                  sha1 = "
+					+ exp.getProperty(GitObjectExport.key_sha_1));
+			sb.append("\n   output_path_no_head = "
+					+ exp.getProperty(GitObjectExport.key_output_path_no_head));
+			sb.append("\n output_path_with_head = "
+					+ exp.getProperty(GitObjectExport.key_output_path_with_head));
+		}
+		String message = sb.toString();
+		String title = res ? "success" : "failed";
+		int msgType = res ? JOptionPane.PLAIN_MESSAGE
+				: JOptionPane.ERROR_MESSAGE;
+		JOptionPane.showMessageDialog(this.mFrame, message, title, msgType);
+
 	}
 
 	public void show() {

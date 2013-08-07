@@ -1,7 +1,5 @@
 package tools.zfv;
 
-import ananas.lib.blueprint.tools.ResourceIdGen;
-
 public class MyResourceIdGen {
 
 	/**
@@ -11,7 +9,7 @@ public class MyResourceIdGen {
 	 * */
 
 	public static void main(String[] arg) {
-		ResourceIdGen.main(arg);
+		ananas.lib.blueprint2.tools.ResourceIdGen.main(arg);
 	}
 
 }

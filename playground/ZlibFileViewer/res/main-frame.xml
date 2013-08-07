@@ -7,17 +7,28 @@
 		<Import type="class:NamespaceLoader" value="ananas.lib.blueprint2.swing_ex.NamespaceLoader" />
 		<Import type="class:NamespaceLoader" value="ananas.lib.blueprint2.swing.NamespaceLoader" />
 		<Import type="class:NamespaceLoader" value="ananas.lib.blueprint2.awt.NamespaceLoader" />
+
 	</Head>
 
 	<Body>
 
+		<awt:responseChain id="menu_listener">
+			<awt:responseChainNode id="menu_listener_node_1" />
+		</awt:responseChain>
+
 		<JFrame xmlns="xmlns:ananas:blueprint:swing" id="root"
 			title="Zlib File Viewer" x="320" y="240" width="640" height="480">
 
-			<JMenuBar id="menu_bar">
+			<JMenuBar id="menu_bar" actionListener="#menu_listener">
 				<JMenu label="File">
 					<JMenuItem command="do-file-open" label="Open ...">
 					</JMenuItem>
+
+					<JMenu label="Export">
+						<JMenuItem label="include head ..." command="file_export_with_head" />
+						<JMenuItem label="without head ..." command="file_export_without_head" />
+					</JMenu>
+
 					<JMenuItem id="menu_exit" label="Exit">
 					</JMenuItem>
 				</JMenu>
