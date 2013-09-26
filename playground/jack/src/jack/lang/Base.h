@@ -8,7 +8,8 @@
 #ifndef BASE_H_
 #define BASE_H_
 
-namespace fuyoo {
+namespace jack {
+namespace lang {
 
 class Base {
 public:
@@ -16,5 +17,7 @@ public:
 	virtual ~Base();
 };
 
-} /* namespace fuyoo */
+} /* namespace lang */
+} /* namespace jack */
+
 #endif /* BASE_H_ */

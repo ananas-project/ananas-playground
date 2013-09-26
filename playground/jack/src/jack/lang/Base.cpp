@@ -7,15 +7,8 @@
 
 #include "Base.h"
 
-namespace fuyoo {
+namespace jack {
+namespace lang {
 
-Base::Base() {
-	// TODO Auto-generated constructor stub
-
-}
-
-Base::~Base() {
-	// TODO Auto-generated destructor stub
-}
-
-} /* namespace fuyoo */
+} /* namespace lang */
+} /* namespace jack */

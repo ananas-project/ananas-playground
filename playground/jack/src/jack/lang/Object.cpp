@@ -7,6 +7,8 @@
 
 #include "Object.h"
 
-namespace fuyoo {
+namespace jack {
+namespace lang {
 
-} /* namespace fuyoo */
+} /* namespace lang */
+} /* namespace jack */
