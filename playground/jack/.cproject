@@ -26,6 +26,7 @@
 								<option id="gnu.cpp.compiler.option.include.paths.1629866258" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="/usr/include/c++/4.7"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/jack/src}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1949555027" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
