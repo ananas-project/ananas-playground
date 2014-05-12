@@ -6,4 +6,6 @@ public class Location {
 	public double latitude;
 	public double altitude;
 
+	public long timestamp;
+
 }
