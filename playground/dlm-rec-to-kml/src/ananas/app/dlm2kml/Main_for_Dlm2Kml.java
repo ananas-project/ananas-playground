@@ -5,11 +5,15 @@ import java.io.File;
 public class Main_for_Dlm2Kml {
 
 	public static void main(String arg[]) {
+		String srcPath = arg[0];
+		File src = new File(srcPath);
+		(new Main_for_Dlm2Kml()).todo(src);
+	}
+
+	public void todo(File src) {
 		try {
-			String srcPath = arg[0];
-			File src, dest;
-			src = new File(srcPath);
-			dest = new File(src.getAbsolutePath() + ".kml");
+			File dir = src.getParentFile();
+			File dest = new File(dir, src.getName() + ".kml");
 			ConvertTask task = new ConvertTask(src, dest);
 			task.run();
 		} catch (Exception e) {
@@ -18,5 +22,7 @@ public class Main_for_Dlm2Kml {
 			System.out.println("error");
 			System.out.println("use command line 'this.jar [src_path]' to do.");
 		}
+
 	}
+
 }
