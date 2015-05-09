@@ -1,0 +1,38 @@
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css"
+	href="lib/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="lib/bootstrap/css/bootstrap-theme.min.css" />
+
+</head>
+<body>
+
+	<div>
+
+		<h2>Maps</h2>
+
+		<button class='btn btn-success btn-upload-raw-data'>Upload</button>
+	</div>
+
+
+	<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lib/js/maps.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			$('.btn-upload-raw-data').click(onClickUpload);
+
+		});
+
+		function onClickUpload() {
+			var flag = 'height=100, width=400, top=0,left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no,status=no';
+			window.open('upload.html', 'newwindow', flag);
+		}
+	</script>
+
+</body>
+</html>
