@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".StartingActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,17 +24,13 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name="DLMonitorService"
-            android:label="@string/app_name" >
-        </service>
+        <service android:name="DLMonitorService" />
+        <service android:name="OtsService" />
 
-        <activity android:name="DateTimeAdjustActivity" >
-        </activity>
-        <activity
-            android:name="TripLogActivity"
-            android:windowSoftInputMode="adjustResize" >
-        </activity>
+        <activity android:name="OtsMonitorActivity" />
+        <activity android:name="MainActivity" />
+        <activity android:name="DateTimeAdjustActivity" />
+        <activity android:name="TripLogActivity" />
     </application>
 
 </manifest>

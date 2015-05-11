@@ -4,21 +4,6 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="core-6.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sf6-core/sf6-core">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="vfs-6.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sf6-vfs/sf6-vfs">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="test-tool-kit-6.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sf6-test-tool-kit/sf6-test-tool-kit">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="xgit.vfile-6.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sf6-xgit-vfile/sf6-xgit-vfile">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="xgit.core-6.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sf6-xgit/sf6-xgit">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="java-output-path" value="/location-monitor-webapp/target/classes"/>
         <property name="context-root" value="ananas-dlm-webapp"/>
     </wb-module>
