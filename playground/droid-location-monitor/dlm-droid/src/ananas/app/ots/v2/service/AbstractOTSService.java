@@ -1,19 +1,19 @@
 package ananas.app.ots.v2.service;
 
+import ananas.app.ots.v2.pojo.OTSLocation;
 import ananas.app.ots.v2.pojo.OTSServiceConfig;
 import ananas.app.ots.v2.pojo.OTSServiceStatus;
+import ananas.app.ots.v2.pojo.OTSServiceTask;
 import ananas.app.ots.v2.tools.ContextTools;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.google.gson.Gson;
-
 public class AbstractOTSService extends Service implements OTSServiceBinding {
 
 	private static final myRuntimeHolder holder;
-	private final Gson gson = new Gson();
+	// private final Gson gson = new Gson();
 
 	/******
 	 * the life-cycle of a runtime
@@ -27,15 +27,106 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 		holder = new myRuntimeHolder();
 	}
 
-	private static class myRuntimeHolder {
+	private static class myServiceContext implements OTSServiceContext {
 
-		public OTSServiceRuntime current;
+		private final Service service;
 		public OTSServiceConfig config;
+		public OTSServiceTask task;
 		public OTSServiceStatus status;
 
-		public myRuntimeHolder() {
+		public myServiceContext(Service service) {
+			this.service = service;
 			config = new OTSServiceConfig();
+			task = new OTSServiceTask();
 			status = new OTSServiceStatus();
+		}
+
+		public void init() {
+			task = new OTSServiceTask();
+			status = new OTSServiceStatus();
+			long now = System.currentTimeMillis();
+			task.setStartTime(now);
+			task.setTaskId("task-" + now);
+			task.setWorking(true);
+		}
+
+		@Override
+		public OTSServiceTask getTask() {
+			return task;
+		}
+
+		@Override
+		public OTSServiceConfig getConfig() {
+			return config;
+		}
+
+		@Override
+		public OTSServiceStatus getStatus() {
+			return status;
+		}
+
+		@Override
+		public Service getService() {
+			return this.service;
+		}
+
+		@Override
+		public void setStatus(OTSServiceStatus status) {
+			this.status = status;
+		}
+
+		public void loadConfig() {
+			ContextTools tools = new ContextTools(service);
+			this.config = tools.loadContextPOJO(OTSServiceConfig.class);
+		}
+
+		public void loadTask() {
+			ContextTools tools = new ContextTools(service);
+			this.task = tools.loadContextPOJO(OTSServiceTask.class);
+		}
+
+		public void loadStatus() {
+			ContextTools tools = new ContextTools(service);
+			this.status = tools.loadContextPOJO(OTSServiceStatus.class);
+		}
+
+		public void saveConfig() {
+			ContextTools tools = new ContextTools(service);
+			tools.saveContextPOJO(this.config);
+		}
+
+		public void saveTask() {
+			ContextTools tools = new ContextTools(service);
+			tools.saveContextPOJO(this.task);
+		}
+
+		@Override
+		public void saveStatus() {
+			ContextTools tools = new ContextTools(service);
+			tools.saveContextPOJO(this.status);
+		}
+
+		public void loadAll() {
+			this.loadConfig();
+			this.loadTask();
+			this.loadStatus();
+		}
+
+		public void saveAll() {
+			this.saveConfig();
+			this.saveStatus();
+			this.saveTask();
+		}
+
+	}
+
+	private static class myRuntimeHolder {
+
+		// config << task << status
+
+		public OTSServiceRuntime current;
+
+		public myRuntimeHolder() {
 		}
 
 		private synchronized OTSServiceRuntime selectCurrentRuntimeSync(
@@ -56,33 +147,12 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 			}
 		}
 
-		public void loadConfig(Service service) {
-			ContextTools tools = new ContextTools(service);
-			this.config = tools.loadContextPOJO(OTSServiceConfig.class);
-		}
-
-		public void loadStatus(Service service) {
-			ContextTools tools = new ContextTools(service);
-			this.status = tools.loadContextPOJO(OTSServiceStatus.class);
-		}
-
-		public void saveConfig(Service service) {
-			ContextTools tools = new ContextTools(service);
-			tools.saveContextPOJO(this.config);
-		}
-
-		public void saveStatus(Service service) {
-			ContextTools tools = new ContextTools(service);
-			tools.saveContextPOJO(this.status);
-		}
-
 		public void update(Service service) {
-			if (status.isRunning()) {
-				if (this.current == null) {
-					OTSServiceRuntime rt = new OTSServiceRuntime(service,
-							config, status);
-					this.setCurrentRuntime(rt);
-				}
+			myServiceContext context = new myServiceContext(service);
+			context.loadAll();
+			if (context.task.isWorking()) {
+				OTSServiceRuntime rt = new OTSServiceRuntime(context);
+				this.setCurrentRuntime(rt);
 			} else {
 				this.setCurrentRuntime(null);
 			}
@@ -98,13 +168,19 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		holder.loadConfig(this);
-		holder.loadStatus(this);
 		holder.update(this);
 	}
 
 	@Override
 	public void onDestroy() {
+		OTSServiceRuntime rt = holder.current;
+		if (rt != null) {
+			OTSServiceContext sc = rt.getServiceContext();
+			if (sc != null) {
+				sc.saveAll();
+			}
+		}
+		holder.setCurrentRuntime(null);
 		super.onDestroy();
 	}
 
@@ -141,82 +217,88 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 			return target.getConfig();
 		}
 
-		public void setStatus(OTSServiceStatus status) {
-			target.setStatus(status);
-		}
-
 		public OTSServiceStatus getStatus() {
 			return target.getStatus();
 		}
 
 		@Override
-		public String getStatusText() {
-			return target.getStatusText();
+		public OTSServiceTask getTask() {
+			return target.getTask();
+		}
+
+		@Override
+		public OTSLocation[] getLastLocations(int limitCount) {
+			return target.getLastLocations(limitCount);
 		}
 
 	}
 
 	@Override
 	public void start() {
-		holder.status.setRunning(true);
-		holder.saveStatus(this);
+		myServiceContext sc = new myServiceContext(this);
+		sc.loadAll();
+		if (sc.task.isWorking()) {
+			return;
+		}
+		sc.init();
+		sc.saveAll();
 		holder.update(this);
 	}
 
 	@Override
 	public void stop() {
-		holder.status.setRunning(false);
-		holder.saveStatus(this);
+		myServiceContext sc = new myServiceContext(this);
+		sc.loadAll();
+		sc.task.setWorking(false);
+		sc.saveAll();
 		holder.update(this);
 	}
 
 	@Override
 	public void restart() {
-		holder.status.setRunning(false);
-		holder.update(this);
-		holder.status.setRunning(true);
+		holder.setCurrentRuntime(null);
 		holder.update(this);
 	}
 
 	@Override
 	public void setConfig(OTSServiceConfig conf) {
-		if (conf == null) {
-			return;
-		}
-		holder.config = new OTSServiceConfig(conf);
-		holder.saveConfig(this);
+		myServiceContext sc = new myServiceContext(this);
+		sc.loadAll();
+		sc.config = conf;
+		sc.saveAll();
 	}
 
 	@Override
 	public OTSServiceConfig getConfig() {
-		return new OTSServiceConfig(holder.config);
+		myServiceContext sc = new myServiceContext(this);
+		sc.loadConfig();
+		return sc.config;
 	}
 
 	@Override
-	public void setStatus(OTSServiceStatus status) {
-		if (status == null) {
-			return;
-		}
-		holder.status = new OTSServiceStatus(status);
-		holder.saveStatus(this);
-		holder.update(this);
+	public OTSServiceTask getTask() {
+		myServiceContext sc = new myServiceContext(this);
+		sc.loadTask();
+		return sc.task;
 	}
 
 	@Override
 	public OTSServiceStatus getStatus() {
-		OTSServiceStatus status = null;
 		OTSServiceRuntime rt = holder.current;
-		if (rt == null) {
-			status = new OTSServiceStatus();
-		} else {
-			status = rt.getStatus();
+		if (rt != null) {
+			OTSServiceContext sc = rt.getServiceContext();
+			return sc.getStatus();
 		}
-		return new OTSServiceStatus(status);
+		return new OTSServiceStatus();
 	}
 
 	@Override
-	public String getStatusText() {
-		String s = gson.toJson(this.getStatus());
-		return System.currentTimeMillis() + " : " + s;
+	public OTSLocation[] getLastLocations(int limitCount) {
+		OTSServiceRuntime rt = holder.current;
+		if (rt != null) {
+			return rt.getLastLocations(limitCount);
+		}
+		return new OTSLocation[0];
 	}
+
 }

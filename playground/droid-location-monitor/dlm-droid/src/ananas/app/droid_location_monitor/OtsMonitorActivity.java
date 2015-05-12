@@ -1,6 +1,7 @@
 package ananas.app.droid_location_monitor;
 
 import ananas.app.ots.v2.AbstractOTSActivity;
+import ananas.app.ots.v2.pojo.OTSLocation;
 import ananas.app.ots.v2.pojo.OTSServiceStatus;
 import ananas.app.ots.v2.service.OTSServiceBinding;
 import android.os.Bundle;
@@ -70,9 +71,49 @@ public class OtsMonitorActivity extends AbstractOTSActivity implements
 
 	private void refresh(OTSServiceBinding serv) {
 		OTSServiceStatus status = serv.getStatus();
-		String s = gson.toJson(status);
-		// String s = serv.getStatusText();
+		// String s = gson.toJson(status);
+		String s = this.toString(status);
 		this.mTextOut.setText(s);
+	}
+
+	private String toString(OTSServiceStatus status) {
+
+		long t0 = status.getTaskStartTime();
+		long now = System.currentTimeMillis();
+		String ln = "\n";
+		OTSLocation loc = status.getLocation();
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("running: ").append(status.isRunning()).append(ln);
+		sb.append("task: ").append(status.getTaskId()).append(ln);
+		sb.append("span-time(sec): ").append((now - t0) / 1000).append(ln);
+		sb.append("count: ").append(status.getCountLocation()).append(ln);
+		sb.append(ln);
+
+		if (loc != null) {
+
+			long timeGps = loc.getSatelliteTime().getTime();
+			long timeDev = loc.getDeviceTime();
+
+			sb.append("lat: ").append(loc.getLatitude()).append(ln);
+			sb.append("lon: ").append(loc.getLongitude()).append(ln);
+			sb.append("alt: ").append(loc.getAltitude()).append(ln);
+			sb.append(ln);
+
+			sb.append("accurcy: ").append(loc.getAccuracy()).append(ln);
+			sb.append("bearing: ").append(loc.getBearing()).append(ln);
+			sb.append("speed: ").append(loc.getSpeed()).append(ln);
+			sb.append(ln);
+
+			sb.append("provider: ").append(loc.getProvider()).append(ln);
+			sb.append("time-dev: ").append(timeDev).append(ln);
+			sb.append("time-gps: ").append(timeGps).append(ln);
+			sb.append("time-dif: ").append((timeDev - timeGps) / 1000)
+					.append(ln);
+		}
+
+		return sb.toString();
 	}
 
 	private void onTimer(final int ms) {

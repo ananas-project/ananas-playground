@@ -3,28 +3,79 @@ package ananas.app.ots.v2.pojo;
 public class OTSLocation extends POJO {
 
 	private float accuracy;
+	private float bearing;
+	private float speed;
 	private double altitude;
 	private double latitude;
 	private double longitude;
-	private long timestamp;
+	private String provider;
+	private String coordinateSystem;
+	private SateTime satelliteTime;
+	private long deviceTime;
 
 	public OTSLocation() {
+		this.provider = "";
+		this.satelliteTime = new SateTime(0);
 	}
 
 	public OTSLocation(OTSLocation init) {
 		this.accuracy = init.accuracy;
+		this.bearing = init.bearing;
+		this.speed = init.speed;
 		this.altitude = init.altitude;
 		this.latitude = init.latitude;
 		this.longitude = init.longitude;
-		this.timestamp = init.timestamp;
+		this.provider = init.provider;
+		this.satelliteTime = init.satelliteTime;
+		this.deviceTime = init.deviceTime;
 	}
 
-	public long getTimestamp() {
-		return timestamp;
+	public String getCoordinateSystem() {
+		return coordinateSystem;
 	}
 
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
+	public void setCoordinateSystem(String coordinateSystem) {
+		this.coordinateSystem = coordinateSystem;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
+
+	public float getBearing() {
+		return bearing;
+	}
+
+	public void setBearing(float bearing) {
+		this.bearing = bearing;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+
+	public SateTime getSatelliteTime() {
+		return satelliteTime;
+	}
+
+	public void setSatelliteTime(SateTime satelliteTime) {
+		this.satelliteTime = satelliteTime;
+	}
+
+	public long getDeviceTime() {
+		return deviceTime;
+	}
+
+	public void setDeviceTime(long deviceTime) {
+		this.deviceTime = deviceTime;
 	}
 
 	public float getAccuracy() {

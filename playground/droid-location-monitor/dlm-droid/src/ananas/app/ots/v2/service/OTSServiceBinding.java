@@ -1,7 +1,9 @@
 package ananas.app.ots.v2.service;
 
+import ananas.app.ots.v2.pojo.OTSLocation;
 import ananas.app.ots.v2.pojo.OTSServiceConfig;
 import ananas.app.ots.v2.pojo.OTSServiceStatus;
+import ananas.app.ots.v2.pojo.OTSServiceTask;
 
 public interface OTSServiceBinding {
 
@@ -15,10 +17,10 @@ public interface OTSServiceBinding {
 
 	OTSServiceConfig getConfig();
 
-	void setStatus(OTSServiceStatus status);
+	OTSServiceTask getTask();
 
 	OTSServiceStatus getStatus();
 
-	String getStatusText();
+	OTSLocation[] getLastLocations(int limitCount);
 
 }
