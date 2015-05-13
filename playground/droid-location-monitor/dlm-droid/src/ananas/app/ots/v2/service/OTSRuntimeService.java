@@ -2,6 +2,7 @@ package ananas.app.ots.v2.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -25,7 +26,7 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 
-public class OTSServiceRuntime {
+public class OTSRuntimeService extends AbstractOTSRuntime {
 
 	private final OTSServiceConfig config;
 	private final OTSServiceTask task;
@@ -37,13 +38,22 @@ public class OTSServiceRuntime {
 
 	private final LocationListener mDataListener = new myDataListener();
 	private final Listener mStatusListener = new myStatusListener();
-	private final OTSServiceContext context;
+	private final List<AbstractOTSRuntime> sublist = new ArrayList<AbstractOTSRuntime>();
+	private final OTSRuntimeQueue mQueue;
 
-	public OTSServiceRuntime(OTSServiceContext context) {
-		this.context = context;
+	public OTSRuntimeService(OTSServiceContext context) {
+		super(context);
 		this.service = context.getService();
 		this.config = new OTSServiceConfig(context.getConfig());
 		this.task = new OTSServiceTask(context.getTask());
+
+		OTSRuntimeREC rec = new OTSRuntimeREC(context);
+		OTSRuntimeUploader up = new OTSRuntimeUploader(context);
+		OTSRuntimeQueue que = new OTSRuntimeQueue(context);
+		sublist.add(rec);
+		sublist.add(que);
+		sublist.add(up);
+		this.mQueue = que;
 	}
 
 	public OTSServiceContext getServiceContext() {
@@ -133,7 +143,7 @@ public class OTSServiceRuntime {
 		@Override
 		public void onLocationChanged(Location location) {
 			final OTSLocation loc2 = Tools.toOTSLocation(location);
-			final OTSServiceRuntime self = OTSServiceRuntime.this;
+			final OTSRuntimeService self = OTSRuntimeService.this;
 			self.sendLocation(loc2);
 			self.saveLocation(loc2);
 		}
@@ -242,6 +252,13 @@ public class OTSServiceRuntime {
 			}
 		}
 		return list.toArray(new OTSLocation[list.size()]);
+	}
+
+	@Override
+	public void onLocation(OTSLocation location) {
+		for (OTSRuntime sub : sublist) {
+			sub.onLocation(location);
+		}
 	}
 
 }

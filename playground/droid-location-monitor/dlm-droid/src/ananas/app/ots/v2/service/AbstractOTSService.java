@@ -124,20 +124,20 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 
 		// config << task << status
 
-		public OTSServiceRuntime current;
+		public OTSRuntimeService current;
 
 		public myRuntimeHolder() {
 		}
 
-		private synchronized OTSServiceRuntime selectCurrentRuntimeSync(
-				OTSServiceRuntime rtNew) {
-			OTSServiceRuntime rtOld = this.current;
+		private synchronized OTSRuntimeService selectCurrentRuntimeSync(
+				OTSRuntimeService rtNew) {
+			OTSRuntimeService rtOld = this.current;
 			this.current = rtNew;
 			return rtOld;
 		}
 
-		public void setCurrentRuntime(final OTSServiceRuntime rtNew) {
-			final OTSServiceRuntime rtOld = this
+		public void setCurrentRuntime(final OTSRuntimeService rtNew) {
+			final OTSRuntimeService rtOld = this
 					.selectCurrentRuntimeSync(rtNew);
 			if (rtOld != null) {
 				rtOld.close();
@@ -151,7 +151,7 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 			myServiceContext context = new myServiceContext(service);
 			context.loadAll();
 			if (context.task.isWorking()) {
-				OTSServiceRuntime rt = new OTSServiceRuntime(context);
+				OTSRuntimeService rt = new OTSRuntimeService(context);
 				this.setCurrentRuntime(rt);
 			} else {
 				this.setCurrentRuntime(null);
@@ -173,7 +173,7 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 
 	@Override
 	public void onDestroy() {
-		OTSServiceRuntime rt = holder.current;
+		OTSRuntimeService rt = holder.current;
 		if (rt != null) {
 			OTSServiceContext sc = rt.getServiceContext();
 			if (sc != null) {
@@ -284,7 +284,7 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 
 	@Override
 	public OTSServiceStatus getStatus() {
-		OTSServiceRuntime rt = holder.current;
+		OTSRuntimeService rt = holder.current;
 		if (rt != null) {
 			OTSServiceContext sc = rt.getServiceContext();
 			return sc.getStatus();
@@ -294,7 +294,7 @@ public class AbstractOTSService extends Service implements OTSServiceBinding {
 
 	@Override
 	public OTSLocation[] getLastLocations(int limitCount) {
-		OTSServiceRuntime rt = holder.current;
+		OTSRuntimeService rt = holder.current;
 		if (rt != null) {
 			return rt.getLastLocations(limitCount);
 		}
